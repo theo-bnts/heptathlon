@@ -1,2 +1,2 @@
-CREATE USER 'harmonia'@'%' IDENTIFIED BY 'harmonia';
-GRANT SELECT, INSERT, UPDATE, DELETE ON harmonia.* TO 'harmonia'@'%';
+CREATE USER 'central'@'%' IDENTIFIED BY 'central';
+GRANT SELECT, INSERT, UPDATE, DELETE ON central.* TO 'central'@'%';

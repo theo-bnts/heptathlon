@@ -4,12 +4,12 @@ services:
   db:
     restart: always
     image: mysql:8
-    container_name: harmonia_mysql
+    container_name: central_mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: harmonia
+      MYSQL_DATABASE: central
     ports:
-      - 3308:3306
+      - "3307:3306"
     volumes:
       - ./db.cnf:/etc/mysql/conf.d/custom.cnf
       - ./tables.sql:/docker-entrypoint-initdb.d/0_tables.sql

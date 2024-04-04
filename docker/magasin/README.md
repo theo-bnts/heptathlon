@@ -8,10 +8,13 @@
 8. Installer (ne rien modifier a l'installation)
 9. Ouvrir DBeaver
 10. Ajouter une connexion : MySQL
+
 - Server Host: localhost
-- Port: 3307
-- Database: central
-- Nom d'utilisateur : central
-- Mot de passe : central
+- Port: 3308
+- Database: magasin
+- Nom d'utilisateur : magasin
+- Mot de passe : magasin
+
 11. Aller dans l'onglet en haut "Propriétés du pilote" et modifier :
+
 - allowPublicKeyRetrieval : false en TRUE
