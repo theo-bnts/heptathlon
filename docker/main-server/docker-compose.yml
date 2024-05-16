@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  db:
+  mysql:
     restart: always
     image: mysql:8
-    container_name: magasin_mysql
+    container_name: main_server_mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: magasin
+      MYSQL_DATABASE: main_server
     ports:
       - "3308:3306"
     volumes:

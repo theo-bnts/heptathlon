@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  db:
+  mysql:
     restart: always
     image: mysql:8
-    container_name: central_mysql
+    container_name: client_server_mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: central
+      MYSQL_DATABASE: client_server
     ports:
       - "3307:3306"
     volumes:
