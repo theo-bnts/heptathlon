@@ -1,4 +1,4 @@
-package fr.bnts.heptathlon.main_server.interfaces;
+package fr.bnts.heptathlon.main_server.rmi;
 
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;

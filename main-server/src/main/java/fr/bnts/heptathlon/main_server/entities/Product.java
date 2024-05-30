@@ -1,6 +1,8 @@
 package fr.bnts.heptathlon.main_server.entities;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private String reference;
     private String name;
     private double price;
