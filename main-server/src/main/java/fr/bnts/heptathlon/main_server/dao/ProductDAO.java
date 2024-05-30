@@ -36,20 +36,22 @@ public abstract class ProductDAO {
         return product.get();
     }
 
-    public static List<Product> getAll() throws SQLException {
+    public static List<Product> getAll(ProductCategory category) throws SQLException {
         List<Product> products = new ArrayList<>();
-        Database.executeQuery("SELECT * FROM PRODUCT", resultSet -> {
+        Database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT_CATEGORY = ?", preparedStatement -> {
             try {
+                preparedStatement.setInt(1, category.getId());
+
+                ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     String reference = resultSet.getString("REFERENCE");
                     String name = resultSet.getString("NAME");
                     double price = resultSet.getDouble("PRICE");
                     int quantity = resultSet.getInt("QUANTITY");
-                    int idCategory = resultSet.getInt("ID_PRODUCT_CATEGORY");
 
-                    ProductCategory category = ProductCategoryDAO.get(idCategory);
-
-                    products.add(new Product(reference, name, price, quantity, category));
+                    if (quantity > 0) {
+                        products.add(new Product(reference, name, price, quantity, category));
+                    }
                 }
             }
             catch (SQLException e) {
