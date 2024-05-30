@@ -1,34 +1,50 @@
 package fr.bnts.heptathlon.main_server.dao;
 
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
+import fr.bnts.heptathlon.main_server.tools.Database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class ProductCategoryDAO {
-    public static List<ProductCategory> getProductCategories() {
-        List<ProductCategory> categories = new ArrayList<>();
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3308/main_server", "main_server", "main_server");
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT_CATEGORY");
+public abstract class ProductCategoryDAO {
+    public static ProductCategory get(int idCategory) throws SQLException {
+        AtomicReference<ProductCategory> category = new AtomicReference<>();
+        Database.prepareQuery("SELECT NAME FROM PRODUCT WHERE ID_PRODUCT_CATEGORY = ?",
+                preparedStatement -> {
+            try {
+                preparedStatement.setInt(1, idCategory);
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("ID_PRODUCT_CATEGORY");
-                String name = resultSet.getString("NAME");
-                categories.add(new ProductCategory(id, name));
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    String name = resultSet.getString("NAME");
+
+                    category.set(new ProductCategory(idCategory, name));
+                }
             }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return category.get();
+    }
 
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static List<ProductCategory> getAll() throws SQLException {
+        List<ProductCategory> categories = new ArrayList<>();
+        Database.executeQuery("SELECT * FROM PRODUCT_CATEGORY", resultSet -> {
+            try {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("ID_PRODUCT_CATEGORY");
+                    String name = resultSet.getString("NAME");
+
+                    categories.add(new ProductCategory(id, name));
+                }
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
         return categories;
     }
 }
