@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Product implements Serializable {
     private String reference;
     private String name;
-    private double price;
+    private float price;
     private int quantity;
     private ProductCategory category;
 
@@ -17,7 +17,7 @@ public class Product implements Serializable {
         return name;
     }
 
-    public double getPrice() {
+    public float getPrice() {
         return price;
     }
 
@@ -29,7 +29,8 @@ public class Product implements Serializable {
         return category;
     }
 
-    public Product(String reference, String name, double price, int quantity, ProductCategory category) {
+    public Product(String reference, String name, float price, int quantity,
+                   ProductCategory category) {
         this.reference = reference;
         this.name = name;
         this.price = price;

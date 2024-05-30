@@ -46,7 +46,7 @@ public abstract class ProductDAO {
                 while (resultSet.next()) {
                     String reference = resultSet.getString("REFERENCE");
                     String name = resultSet.getString("NAME");
-                    double price = resultSet.getDouble("PRICE");
+                    float price = resultSet.getFloat("PRICE");
                     int quantity = resultSet.getInt("QUANTITY");
 
                     if (quantity > 0) {
