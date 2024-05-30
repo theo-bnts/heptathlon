@@ -1,6 +1,6 @@
 package fr.bnts.heptathlon.client_server;
 
-import fr.bnts.heptathlon.main_server.Service;
+import fr.bnts.heptathlon.main_server.interfaces.Service;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
 import java.rmi.registry.LocateRegistry;

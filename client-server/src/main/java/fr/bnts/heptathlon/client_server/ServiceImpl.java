@@ -1,7 +1,7 @@
 package fr.bnts.heptathlon.client_server;
 
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.Service;
+import fr.bnts.heptathlon.main_server.interfaces.Service;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

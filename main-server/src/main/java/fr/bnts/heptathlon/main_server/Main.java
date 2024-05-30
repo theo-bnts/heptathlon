@@ -1,5 +1,7 @@
 package fr.bnts.heptathlon.main_server;
 
+import fr.bnts.heptathlon.main_server.interfaces.Service;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
