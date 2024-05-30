@@ -3,14 +3,14 @@ package fr.bnts.heptathlon.main_server.entities;
 import java.io.Serializable;
 
 public class Product implements Serializable {
-    private String reference;
+    private String id;
     private String name;
     private float price;
     private int quantity;
     private ProductCategory category;
 
-    public String getReference() {
-        return reference;
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -29,9 +29,9 @@ public class Product implements Serializable {
         return category;
     }
 
-    public Product(String reference, String name, float price, int quantity,
+    public Product(String id, String name, float price, int quantity,
                    ProductCategory category) {
-        this.reference = reference;
+        this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -41,7 +41,7 @@ public class Product implements Serializable {
     @Override
     public String toString() {
         return "Product{" +
-                "reference='" + reference + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", quantity=" + quantity +

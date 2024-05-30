@@ -1,7 +1,11 @@
 package fr.bnts.heptathlon.main_server.rmi;
 
+import fr.bnts.heptathlon.main_server.dao.InvoiceDAO;
+import fr.bnts.heptathlon.main_server.dao.InvoiceProductDAO;
 import fr.bnts.heptathlon.main_server.dao.ProductCategoryDAO;
 import fr.bnts.heptathlon.main_server.dao.ProductDAO;
+import fr.bnts.heptathlon.main_server.entities.Invoice;
+import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
@@ -16,18 +20,8 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
-    public Product getProduct(String reference) throws RemoteException, SQLException {
-        return ProductDAO.get(reference);
-    }
-
-    @Override
-    public List<Product> getProducts() throws RemoteException, SQLException {
-        return ProductDAO.getAll();
-    }
-
-    @Override
-    public List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException {
-        return ProductDAO.getAll(category);
+    public List<ProductCategory> getProductCategories() throws RemoteException, SQLException {
+        return ProductCategoryDAO.get();
     }
 
     @Override
@@ -36,7 +30,22 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
-    public List<ProductCategory> getProductCategories() throws RemoteException, SQLException {
-        return ProductCategoryDAO.getAll();
+    public Product getProduct(String id) throws RemoteException, SQLException {
+        return ProductDAO.get(id);
+    }
+
+    @Override
+    public List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException {
+        return ProductDAO.get(category);
+    }
+
+    @Override
+    public List<Invoice> getInvoices() throws RemoteException, SQLException {
+        return InvoiceDAO.get();
+    }
+
+    @Override
+    public List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException, SQLException {
+        return InvoiceProductDAO.get(invoice);
     }
 }

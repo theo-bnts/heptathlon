@@ -20,7 +20,7 @@ public abstract class ProductDAO {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
                     String name = resultSet.getString("NAME");
-                    double price = resultSet.getDouble("PRICE");
+                    float price = resultSet.getFloat("PRICE");
                     int quantity = resultSet.getInt("QUANTITY");
                     int idCategory = resultSet.getInt("ID_PRODUCT_CATEGORY");
 
@@ -36,7 +36,7 @@ public abstract class ProductDAO {
         return product.get();
     }
 
-    public static List<Product> getAll(ProductCategory category) throws SQLException {
+    public static List<Product> get(ProductCategory category) throws SQLException {
         List<Product> products = new ArrayList<>();
         Database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT_CATEGORY = ?", preparedStatement -> {
             try {
