@@ -1,6 +1,7 @@
 package fr.bnts.heptathlon.client_server;
 
-import fr.bnts.heptathlon.client_server.tools.DatabaseImpl;
+import fr.bnts.heptathlon.main_server.dao.ProductCategoryDAO;
+import fr.bnts.heptathlon.main_server.dao.ProductDAO;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
@@ -17,26 +18,26 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         try {
-            Database mainServerDatabase = new fr.bnts.heptathlon.main_server.tools.DatabaseImpl();
-            Database clientServerDatabase = new DatabaseImpl();
+            Registry mainServerRegistry = LocateRegistry.getRegistry("localhost", 1099);
+            Service mainServerService = (Service) mainServerRegistry.lookup("Service");
 
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            Service service = (Service) registry.lookup("Service");
+            Database mainServerDatabase = new fr.bnts.heptathlon.main_server.tools.DatabaseImpl();
+            Database clientServerDatabase = new fr.bnts.heptathlon.client_server.tools.DatabaseImpl();
 
             System.out.println("Sync products from main server");
 
             List<ProductCategory> productCategories =
-                    service.getProductCategories(mainServerDatabase);
+                    mainServerService.getProductCategories(mainServerDatabase);
 
             for (ProductCategory productCategory : productCategories) {
-                service.addProductCategory(clientServerDatabase, productCategory);
+                ProductCategoryDAO.add(clientServerDatabase, productCategory);
             }
 
-            List<Product> products = service.getProducts(mainServerDatabase,
+            List<Product> products = mainServerService.getProducts(mainServerDatabase,
                     productCategories.getFirst());
 
             for (Product product : products) {
-                service.addProduct(clientServerDatabase, product);
+                ProductDAO.add(clientServerDatabase, product);
             }
 
             System.out.println("Add two invoice products");
@@ -51,7 +52,7 @@ public class Main {
                     products.getFirst()
             );
 
-            service.addInvoiceProduct(mainServerDatabase, invoiceProductA);
+            mainServerService.addInvoiceProduct(mainServerDatabase, invoiceProductA);
 
             InvoiceProduct invoiceProductB = new InvoiceProduct(
                     UUID.randomUUID().toString(),
@@ -61,7 +62,7 @@ public class Main {
                     products.get(1)
             );
 
-            service.addInvoiceProduct(mainServerDatabase, invoiceProductB);
+            mainServerService.addInvoiceProduct(mainServerDatabase, invoiceProductB);
 
             System.out.println("Create invoice");
 
@@ -72,11 +73,11 @@ public class Main {
                     "CARD"
             );
 
-            service.addInvoice(mainServerDatabase, invoice);
+            mainServerService.addInvoice(mainServerDatabase, invoice);
 
             System.out.println("Get all invoices");
 
-            List<Invoice> invoices = service.getInvoices(mainServerDatabase);
+            List<Invoice> invoices = mainServerService.getInvoices(mainServerDatabase);
 
             for (Invoice invoice_ : invoices) {
                 System.out.println(invoice_);
@@ -84,7 +85,7 @@ public class Main {
 
             System.out.println("Get all invoice products of the invoice " + invoices.getFirst().getId());
 
-            List<InvoiceProduct> invoiceProducts = service.getInvoiceProducts(mainServerDatabase, invoices.getFirst());
+            List<InvoiceProduct> invoiceProducts = mainServerService.getInvoiceProducts(mainServerDatabase, invoices.getFirst());
 
             for (InvoiceProduct invoiceProduct : invoiceProducts) {
                 System.out.println(invoiceProduct);
@@ -92,10 +93,10 @@ public class Main {
 
             System.out.println("Send invoice test file");
 
-            byte[] file = service.readInvoiceFile("client-server",
+            byte[] file = mainServerService.readInvoiceFile("client-server",
                     invoices.getFirst());
 
-            service.writeInvoiceFile("main-server", invoices.getFirst(), file);
+            mainServerService.writeInvoiceFile("main-server", invoices.getFirst(), file);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -54,7 +54,7 @@ public abstract class ProductCategoryDAO {
                 preparedStatement -> {
                     try {
                         preparedStatement.setInt(1, category.getId());
-                        preparedStatement.setString(1, category.getName());
+                        preparedStatement.setString(2, category.getName());
 
                         preparedStatement.executeUpdate();
                     }
