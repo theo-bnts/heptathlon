@@ -26,7 +26,7 @@ public class Main {
 
             System.out.println("Sync products from main server");
 
-            new DatabaseSynchronisation(mainServerService, clientServerDatabase)
+            new DatabaseSynchronisation(mainServerService, mainServerDatabase, clientServerDatabase)
                     .synchronise();
 
             System.out.println("Add two invoice products");

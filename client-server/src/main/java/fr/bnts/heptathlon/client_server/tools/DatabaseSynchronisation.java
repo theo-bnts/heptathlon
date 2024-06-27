@@ -13,10 +13,13 @@ import java.util.List;
 
 public class DatabaseSynchronisation {
     Service remoteService;
+    Database remoteDatabase;
     Database database;
 
-    public DatabaseSynchronisation(Service remoteService, Database database) {
+    public DatabaseSynchronisation(Service remoteService,
+                                   Database remoteDatabase, Database database) {
         this.remoteService = remoteService;
+        this.remoteDatabase = remoteDatabase;
         this.database = database;
     }
 
@@ -27,7 +30,7 @@ public class DatabaseSynchronisation {
 
     public void synchroniseProductCategories() throws SQLException, RemoteException {
         List<ProductCategory> productCategories =
-                remoteService.getProductCategories(database);
+                remoteService.getProductCategories(remoteDatabase);
 
         for (ProductCategory productCategory : productCategories) {
             ProductCategoryDAO.add(database, productCategory);
@@ -35,8 +38,8 @@ public class DatabaseSynchronisation {
     }
 
     public void synchroniseProducts() throws SQLException, RemoteException {
-        List<Product> products = remoteService.getProducts(database);
-
+        List<Product> products = remoteService.getProducts(remoteDatabase);
+        System.out.println(products.size());
         for (Product product : products) {
             ProductDAO.add(database, product);
         }

@@ -24,6 +24,8 @@ public abstract class ProductDAO {
 
                     ProductCategory category =
                             ProductCategoryDAO.get(database, categoryId);
+
+                    products.add(new Product(id, name, price, quantity, category));
                 }
             }
             catch (SQLException e) {
@@ -33,12 +35,12 @@ public abstract class ProductDAO {
         return products;
     }
 
-    public static Product get(Database database, String reference) throws SQLException {
+    public static Product get(Database database, String productId) throws SQLException {
         AtomicReference<Product> product = new AtomicReference<>();
         database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?",
                 preparedStatement -> {
             try {
-                preparedStatement.setString(1, reference);
+                preparedStatement.setString(1, productId);
 
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
@@ -50,7 +52,7 @@ public abstract class ProductDAO {
                     ProductCategory category =
                             ProductCategoryDAO.get(database, categoryId);
 
-                    product.set(new Product(reference, name, price, quantity, category));
+                    product.set(new Product(productId, name, price, quantity, category));
                 }
             }
             catch (SQLException e) {
