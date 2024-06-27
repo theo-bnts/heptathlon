@@ -9,6 +9,28 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ProductCategoryDAO {
+    public static ProductCategory get(Database database, int idCategory) throws SQLException {
+        AtomicReference<ProductCategory> category = new AtomicReference<>();
+        database.prepareQuery("SELECT NAME FROM PRODUCT WHERE " +
+                        "ID_PRODUCT_CATEGORY = ?",
+                preparedStatement -> {
+                    try {
+                        preparedStatement.setInt(1, idCategory);
+
+                        ResultSet resultSet = preparedStatement.executeQuery();
+                        if (resultSet.next()) {
+                            String name = resultSet.getString("NAME");
+
+                            category.set(new ProductCategory(idCategory, name));
+                        }
+                    }
+                    catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        return category.get();
+    }
+
     public static List<ProductCategory> get(Database database) throws SQLException {
         List<ProductCategory> categories = new ArrayList<>();
         database.executeQuery("SELECT * FROM PRODUCT_CATEGORY", resultSet -> {
@@ -27,25 +49,18 @@ public abstract class ProductCategoryDAO {
         return categories;
     }
 
-    public static ProductCategory get(Database database, int idCategory) throws SQLException {
-        AtomicReference<ProductCategory> category = new AtomicReference<>();
-        database.prepareQuery("SELECT NAME FROM PRODUCT WHERE " +
-                        "ID_PRODUCT_CATEGORY = ?",
+    public static void add(Database database, ProductCategory category) throws SQLException {
+        database.prepareQuery("INSERT INTO PRODUCT_CATEGORY (ID_PRODUCT_CATEGORY, NAME) VALUES (?, ?)",
                 preparedStatement -> {
-            try {
-                preparedStatement.setInt(1, idCategory);
+                    try {
+                        preparedStatement.setInt(1, category.getId());
+                        preparedStatement.setString(1, category.getName());
 
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    String name = resultSet.getString("NAME");
-
-                    category.set(new ProductCategory(idCategory, name));
-                }
-            }
-            catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        return category.get();
+                        preparedStatement.executeUpdate();
+                    }
+                    catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }

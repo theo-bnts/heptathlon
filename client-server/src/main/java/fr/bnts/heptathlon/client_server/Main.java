@@ -1,12 +1,12 @@
 package fr.bnts.heptathlon.client_server;
 
+import fr.bnts.heptathlon.client_server.tools.DatabaseImpl;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 import fr.bnts.heptathlon.main_server.tools.Database;
-import fr.bnts.heptathlon.main_server.tools.DatabaseImpl;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,27 +17,26 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         try {
-            Database database = new DatabaseImpl();
+            Database mainServerDatabase = new fr.bnts.heptathlon.main_server.tools.DatabaseImpl();
+            Database clientServerDatabase = new DatabaseImpl();
 
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             Service service = (Service) registry.lookup("Service");
 
-            System.out.println("Get all product categories");
+            System.out.println("Sync products from main server");
 
             List<ProductCategory> productCategories =
-                    service.getProductCategories(database);
+                    service.getProductCategories(mainServerDatabase);
 
             for (ProductCategory productCategory : productCategories) {
-                System.out.println(productCategory);
+                service.addProductCategory(clientServerDatabase, productCategory);
             }
 
-            System.out.println("Get all products of the category " + productCategories.getFirst().getName());
-
-            List<Product> products = service.getProducts(database,
+            List<Product> products = service.getProducts(mainServerDatabase,
                     productCategories.getFirst());
 
             for (Product product : products) {
-                System.out.println(product);
+                service.addProduct(clientServerDatabase, product);
             }
 
             System.out.println("Add two invoice products");
@@ -52,7 +51,7 @@ public class Main {
                     products.getFirst()
             );
 
-            service.addInvoiceProduct(database, invoiceProductA);
+            service.addInvoiceProduct(mainServerDatabase, invoiceProductA);
 
             InvoiceProduct invoiceProductB = new InvoiceProduct(
                     UUID.randomUUID().toString(),
@@ -62,7 +61,7 @@ public class Main {
                     products.get(1)
             );
 
-            service.addInvoiceProduct(database, invoiceProductB);
+            service.addInvoiceProduct(mainServerDatabase, invoiceProductB);
 
             System.out.println("Create invoice");
 
@@ -73,11 +72,11 @@ public class Main {
                     "CARD"
             );
 
-            service.addInvoice(database, invoice);
+            service.addInvoice(mainServerDatabase, invoice);
 
             System.out.println("Get all invoices");
 
-            List<Invoice> invoices = service.getInvoices(database);
+            List<Invoice> invoices = service.getInvoices(mainServerDatabase);
 
             for (Invoice invoice_ : invoices) {
                 System.out.println(invoice_);
@@ -85,7 +84,7 @@ public class Main {
 
             System.out.println("Get all invoice products of the invoice " + invoices.getFirst().getId());
 
-            List<InvoiceProduct> invoiceProducts = service.getInvoiceProducts(database, invoices.getFirst());
+            List<InvoiceProduct> invoiceProducts = service.getInvoiceProducts(mainServerDatabase, invoices.getFirst());
 
             for (InvoiceProduct invoiceProduct : invoiceProducts) {
                 System.out.println(invoiceProduct);

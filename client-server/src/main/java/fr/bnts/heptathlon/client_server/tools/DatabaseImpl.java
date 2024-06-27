@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.sql.*;
 import java.util.function.Consumer;
 
-public abstract class DatabaseImpl implements Database, Serializable {
+public class DatabaseImpl implements Database, Serializable {
     public static final String URL = "jdbc:mysql://localhost:3307" +
             "/client_server";
     public static final String USER = "client_server";

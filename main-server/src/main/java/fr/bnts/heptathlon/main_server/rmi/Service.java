@@ -13,11 +13,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface Service extends Remote {
-    List<ProductCategory> getProductCategories(Database database) throws RemoteException, SQLException;
     ProductCategory getProductCategory(Database database, int id) throws RemoteException, SQLException;
+    List<ProductCategory> getProductCategories(Database database) throws RemoteException, SQLException;
+    void addProductCategory(Database database, ProductCategory productCategory) throws RemoteException, SQLException;
 
     Product getProduct(Database database, String id) throws RemoteException, SQLException;
     List<Product> getProducts(Database database, ProductCategory category) throws RemoteException, SQLException;
+    void addProduct(Database database, Product product) throws RemoteException, SQLException;
 
     List<InvoiceProduct> getInvoiceProducts(Database database, String checkoutId) throws RemoteException, SQLException;
     List<InvoiceProduct> getInvoiceProducts(Database database, Invoice invoice) throws RemoteException,

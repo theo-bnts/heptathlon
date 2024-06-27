@@ -62,4 +62,22 @@ public abstract class ProductDAO {
         });
         return products;
     }
+
+    public static void add(Database database, Product product) throws SQLException {
+        database.prepareQuery("INSERT INTO PRODUCT (ID_PRODUCT, NAME, PRICE, QUANTITY, ID_PRODUCT_CATEGORY) VALUES (?, ?, ?, ?, ?)",
+                preparedStatement -> {
+            try {
+                preparedStatement.setString(1, product.getId());
+                preparedStatement.setString(2, product.getName());
+                preparedStatement.setFloat(3, product.getPrice());
+                preparedStatement.setInt(4, product.getQuantity());
+                preparedStatement.setInt(5, product.getCategory().getId());
+
+                preparedStatement.executeUpdate();
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 }
