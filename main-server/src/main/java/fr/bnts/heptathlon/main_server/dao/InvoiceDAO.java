@@ -33,7 +33,7 @@ public abstract class InvoiceDAO {
 
     public static void add(Invoice invoice) throws SQLException {
         Database.prepareQuery("INSERT INTO INVOICE (ID_INVOICE, " +
-                        "PUBLISHED_DATE, PRICE, PAYMENT_METHOD) VALUES (?, ?, ?)",
+                        "PUBLISHED_DATE, PRICE, PAYMENT_METHOD) VALUES (?, ?, ?, ?)",
                 preparedStatement -> {
             try {
                 preparedStatement.setString(1, invoice.getId());

@@ -8,7 +8,6 @@ public class InvoiceProduct implements Serializable {
     private float price;
     private int quantity;
     private Product product;
-    private Invoice invoice;
 
     public String getId() {
         return id;
@@ -30,18 +29,13 @@ public class InvoiceProduct implements Serializable {
         return product;
     }
 
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
     public InvoiceProduct(String id, String checkoutId, float price,
-                          int quantity, Product product, Invoice invoice) {
+                          int quantity, Product product) {
         this.id = id;
         this.checkoutId = checkoutId;
         this.price = price;
         this.quantity = quantity;
         this.product = product;
-        this.invoice = invoice;
     }
 
     @Override
@@ -52,7 +46,6 @@ public class InvoiceProduct implements Serializable {
                 ", price=" + price +
                 ", quantity=" + quantity +
                 ", product=" + product +
-                ", invoice=" + invoice +
                 '}';
     }
 }

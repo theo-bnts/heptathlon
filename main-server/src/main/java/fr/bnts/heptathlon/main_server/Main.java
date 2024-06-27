@@ -12,7 +12,7 @@ public class Main {
             Service service = new ServiceImpl();
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("Service", service);
-            System.out.println("Main Server is running...");
+            System.out.println("Main Server is running");
         } catch (Exception e) {
             e.printStackTrace();
         }

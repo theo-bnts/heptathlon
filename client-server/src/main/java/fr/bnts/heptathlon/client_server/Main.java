@@ -11,7 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
@@ -35,12 +37,47 @@ public class Main {
                 System.out.println(product);
             }
 
+            System.out.println("Add two invoice products");
+
+            String checkoutId = UUID.randomUUID().toString();
+
+            InvoiceProduct invoiceProductA = new InvoiceProduct(
+                    UUID.randomUUID().toString(),
+                    checkoutId,
+                    (float)3,
+                    2,
+                    products.getFirst()
+            );
+
+            service.addInvoiceProduct(invoiceProductA);
+
+            InvoiceProduct invoiceProductB = new InvoiceProduct(
+                    UUID.randomUUID().toString(),
+                    checkoutId,
+                    (float)6,
+                    3,
+                    products.get(1)
+            );
+
+            service.addInvoiceProduct(invoiceProductB);
+
+            System.out.println("Create invoice");
+
+            Invoice invoice = new Invoice(
+                    checkoutId,
+                    LocalDateTime.now(),
+                    (float)24,
+                    "CARD"
+            );
+
+            service.addInvoice(invoice);
+
             System.out.println("Get all invoices");
 
             List<Invoice> invoices = service.getInvoices();
 
-            for (Invoice invoice : invoices) {
-                System.out.println(invoice);
+            for (Invoice invoice_ : invoices) {
+                System.out.println(invoice_);
             }
 
             System.out.println("Get all invoice products of the invoice " + invoices.getFirst().getId());
