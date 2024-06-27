@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ProductCategoryDAO {
-    public static List<ProductCategory> get() throws SQLException {
+    public static List<ProductCategory> get(Database database) throws SQLException {
         List<ProductCategory> categories = new ArrayList<>();
-        Database.executeQuery("SELECT * FROM PRODUCT_CATEGORY", resultSet -> {
+        database.executeQuery("SELECT * FROM PRODUCT_CATEGORY", resultSet -> {
             try {
                 while (resultSet.next()) {
                     int id = resultSet.getInt("ID_PRODUCT_CATEGORY");
@@ -27,9 +27,10 @@ public abstract class ProductCategoryDAO {
         return categories;
     }
 
-    public static ProductCategory get(int idCategory) throws SQLException {
+    public static ProductCategory get(Database database, int idCategory) throws SQLException {
         AtomicReference<ProductCategory> category = new AtomicReference<>();
-        Database.prepareQuery("SELECT NAME FROM PRODUCT WHERE ID_PRODUCT_CATEGORY = ?",
+        database.prepareQuery("SELECT NAME FROM PRODUCT WHERE " +
+                        "ID_PRODUCT_CATEGORY = ?",
                 preparedStatement -> {
             try {
                 preparedStatement.setInt(1, idCategory);

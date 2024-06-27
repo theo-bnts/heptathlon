@@ -1,7 +1,6 @@
 package fr.bnts.heptathlon.main_server.dao;
 
 import fr.bnts.heptathlon.main_server.entities.Invoice;
-import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.tools.Database;
 
 import java.sql.SQLException;
@@ -10,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class InvoiceDAO {
-    public static List<Invoice> get() throws SQLException {
+    public static List<Invoice> get(Database database) throws SQLException {
         List<Invoice> invoices = new ArrayList<>();
-        Database.executeQuery("SELECT * FROM INVOICE", resultSet -> {
+        database.executeQuery("SELECT * FROM INVOICE", resultSet -> {
             try {
                 while (resultSet.next()) {
                     String id = resultSet.getString("ID_INVOICE");
@@ -31,8 +30,8 @@ public abstract class InvoiceDAO {
         return invoices;
     }
 
-    public static void add(Invoice invoice) throws SQLException {
-        Database.prepareQuery("INSERT INTO INVOICE (ID_INVOICE, " +
+    public static void add(Database database, Invoice invoice) throws SQLException {
+        database.prepareQuery("INSERT INTO INVOICE (ID_INVOICE, " +
                         "PUBLISHED_DATE, PRICE, PAYMENT_METHOD) VALUES (?, ?, ?, ?)",
                 preparedStatement -> {
             try {

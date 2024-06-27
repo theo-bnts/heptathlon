@@ -5,10 +5,9 @@ import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
+import fr.bnts.heptathlon.main_server.tools.Database;
+import fr.bnts.heptathlon.main_server.tools.DatabaseImpl;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.time.LocalDateTime;
@@ -18,12 +17,15 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         try {
+            Database database = new DatabaseImpl();
+
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             Service service = (Service) registry.lookup("Service");
 
             System.out.println("Get all product categories");
 
-            List<ProductCategory> productCategories = service.getProductCategories();
+            List<ProductCategory> productCategories =
+                    service.getProductCategories(database);
 
             for (ProductCategory productCategory : productCategories) {
                 System.out.println(productCategory);
@@ -31,7 +33,8 @@ public class Main {
 
             System.out.println("Get all products of the category " + productCategories.getFirst().getName());
 
-            List<Product> products = service.getProducts(productCategories.getFirst());
+            List<Product> products = service.getProducts(database,
+                    productCategories.getFirst());
 
             for (Product product : products) {
                 System.out.println(product);
@@ -49,7 +52,7 @@ public class Main {
                     products.getFirst()
             );
 
-            service.addInvoiceProduct(invoiceProductA);
+            service.addInvoiceProduct(database, invoiceProductA);
 
             InvoiceProduct invoiceProductB = new InvoiceProduct(
                     UUID.randomUUID().toString(),
@@ -59,7 +62,7 @@ public class Main {
                     products.get(1)
             );
 
-            service.addInvoiceProduct(invoiceProductB);
+            service.addInvoiceProduct(database, invoiceProductB);
 
             System.out.println("Create invoice");
 
@@ -70,11 +73,11 @@ public class Main {
                     "CARD"
             );
 
-            service.addInvoice(invoice);
+            service.addInvoice(database, invoice);
 
             System.out.println("Get all invoices");
 
-            List<Invoice> invoices = service.getInvoices();
+            List<Invoice> invoices = service.getInvoices(database);
 
             for (Invoice invoice_ : invoices) {
                 System.out.println(invoice_);
@@ -82,7 +85,7 @@ public class Main {
 
             System.out.println("Get all invoice products of the invoice " + invoices.getFirst().getId());
 
-            List<InvoiceProduct> invoiceProducts = service.getInvoiceProducts(invoices.getFirst());
+            List<InvoiceProduct> invoiceProducts = service.getInvoiceProducts(database, invoices.getFirst());
 
             for (InvoiceProduct invoiceProduct : invoiceProducts) {
                 System.out.println(invoiceProduct);
@@ -90,13 +93,10 @@ public class Main {
 
             System.out.println("Send invoice test file");
 
-            Path fileFullPath =
-                    Paths.get("../client-server/src/main/resources" +
-                            "/test-invoice.txt");
+            byte[] file = service.readInvoiceFile("client-server",
+                    invoices.getFirst());
 
-            byte[] file = Files.readAllBytes(fileFullPath);
-
-            service.sendInvoiceFile(invoices.getFirst(), file);
+            service.writeInvoiceFile("main-server", invoices.getFirst(), file);
         } catch (Exception e) {
             e.printStackTrace();
         }

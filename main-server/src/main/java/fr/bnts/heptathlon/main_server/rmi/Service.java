@@ -4,6 +4,7 @@ import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
+import fr.bnts.heptathlon.main_server.tools.Database;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -12,19 +13,21 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface Service extends Remote {
-    List<ProductCategory> getProductCategories() throws RemoteException, SQLException;
-    ProductCategory getProductCategory(int id) throws RemoteException, SQLException;
+    List<ProductCategory> getProductCategories(Database database) throws RemoteException, SQLException;
+    ProductCategory getProductCategory(Database database, int id) throws RemoteException, SQLException;
 
-    Product getProduct(String id) throws RemoteException, SQLException;
-    List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException;
+    Product getProduct(Database database, String id) throws RemoteException, SQLException;
+    List<Product> getProducts(Database database, ProductCategory category) throws RemoteException, SQLException;
 
-    List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException;
-    List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException,
+    List<InvoiceProduct> getInvoiceProducts(Database database, String checkoutId) throws RemoteException, SQLException;
+    List<InvoiceProduct> getInvoiceProducts(Database database, Invoice invoice) throws RemoteException,
             SQLException;
-    void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException;
+    void addInvoiceProduct(Database database, InvoiceProduct invoiceProduct) throws RemoteException, SQLException;
 
-    List<Invoice> getInvoices() throws RemoteException, SQLException;
-    void addInvoice(Invoice invoice) throws RemoteException, SQLException;
+    List<Invoice> getInvoices(Database database) throws RemoteException, SQLException;
+    void addInvoice(Database database, Invoice invoice) throws RemoteException, SQLException;
 
-    void sendInvoiceFile(Invoice invoice, byte[] file) throws IOException;
+    String getInvoiceFileFullPath(String packageName, Invoice invoice) throws RemoteException;
+    byte[] readInvoiceFile(String packageName, Invoice invoice) throws RemoteException, IOException;
+    void writeInvoiceFile(String packageName, Invoice invoice, byte[] file) throws IOException;
 }

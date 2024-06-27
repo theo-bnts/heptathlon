@@ -9,6 +9,7 @@ import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
+import fr.bnts.heptathlon.main_server.tools.Database;
 
 import java.io.IOException;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,52 +23,63 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
-    public List<ProductCategory> getProductCategories() throws RemoteException, SQLException {
-        return ProductCategoryDAO.get();
+    public List<ProductCategory> getProductCategories(Database database) throws RemoteException, SQLException {
+        return ProductCategoryDAO.get(database);
     }
 
     @Override
-    public ProductCategory getProductCategory(int id) throws RemoteException, SQLException {
-        return ProductCategoryDAO.get(id);
+    public ProductCategory getProductCategory(Database database, int id) throws RemoteException, SQLException {
+        return ProductCategoryDAO.get(database, id);
     }
 
     @Override
-    public Product getProduct(String id) throws RemoteException, SQLException {
-        return ProductDAO.get(id);
+    public Product getProduct(Database database, String id) throws RemoteException, SQLException {
+        return ProductDAO.get(database, id);
     }
 
     @Override
-    public List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException {
-        return ProductDAO.get(category);
+    public List<Product> getProducts(Database database, ProductCategory category) throws RemoteException, SQLException {
+        return ProductDAO.get(database, category);
     }
 
     @Override
-    public List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException {
-        return InvoiceProductDAO.get(checkoutId);
+    public List<InvoiceProduct> getInvoiceProducts(Database database, String checkoutId) throws RemoteException, SQLException {
+        return InvoiceProductDAO.get(database, checkoutId);
     }
 
     @Override
-    public List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException, SQLException {
-        return InvoiceProductDAO.get(invoice);
+    public List<InvoiceProduct> getInvoiceProducts(Database database, Invoice invoice) throws RemoteException, SQLException {
+        return InvoiceProductDAO.get(database, invoice);
     }
 
     @Override
-    public void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException {
-        InvoiceProductDAO.add(invoiceProduct);
+    public void addInvoiceProduct(Database database, InvoiceProduct invoiceProduct) throws RemoteException, SQLException {
+        InvoiceProductDAO.add(database, invoiceProduct);
     }
 
     @Override
-    public List<Invoice> getInvoices() throws RemoteException, SQLException {
-        return InvoiceDAO.get();
+    public List<Invoice> getInvoices(Database database) throws RemoteException, SQLException {
+        return InvoiceDAO.get(database);
     }
 
     @Override
-    public void addInvoice(Invoice invoice) throws RemoteException, SQLException {
-        InvoiceDAO.add(invoice);
+    public void addInvoice(Database database, Invoice invoice) throws RemoteException, SQLException {
+        InvoiceDAO.add(database, invoice);
     }
 
     @Override
-    public void sendInvoiceFile(Invoice invoice, byte[] file) throws IOException {
-        InvoiceFileDAO.send(invoice, file);
+    public String getInvoiceFileFullPath(String packageName, Invoice invoice) {
+        return InvoiceFileDAO.getFullPath(packageName, invoice);
+    }
+
+    @Override
+    public byte[] readInvoiceFile(String packageName, Invoice invoice) throws IOException {
+        return InvoiceFileDAO.read(packageName, invoice);
+    }
+
+    @Override
+    public void writeInvoiceFile(String packageName, Invoice invoice,
+                                byte[] file) throws IOException {
+        InvoiceFileDAO.write(packageName, invoice, file);
     }
 }

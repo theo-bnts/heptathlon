@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ProductDAO {
-    public static Product get(String reference) throws SQLException {
+    public static Product get(Database database, String reference) throws SQLException {
         AtomicReference<Product> product = new AtomicReference<>();
-        Database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?",
+        database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?",
                 preparedStatement -> {
             try {
                 preparedStatement.setString(1, reference);
@@ -25,7 +25,8 @@ public abstract class ProductDAO {
                     int quantity = resultSet.getInt("QUANTITY");
                     int categoryId = resultSet.getInt("ID_PRODUCT_CATEGORY");
 
-                    ProductCategory category = ProductCategoryDAO.get(categoryId);
+                    ProductCategory category =
+                            ProductCategoryDAO.get(database, categoryId);
 
                     product.set(new Product(reference, name, price, quantity, category));
                 }
@@ -37,9 +38,11 @@ public abstract class ProductDAO {
         return product.get();
     }
 
-    public static List<Product> get(ProductCategory category) throws SQLException {
+    public static List<Product> get(Database database, ProductCategory category) throws SQLException {
         List<Product> products = new ArrayList<>();
-        Database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT_CATEGORY = ?", preparedStatement -> {
+        System.out.println(category);
+        database.prepareQuery("SELECT * FROM PRODUCT WHERE " +
+                "ID_PRODUCT_CATEGORY = ?", preparedStatement -> {
             try {
                 preparedStatement.setInt(1, category.getId());
 
@@ -50,9 +53,7 @@ public abstract class ProductDAO {
                     float price = resultSet.getFloat("PRICE");
                     int quantity = resultSet.getInt("QUANTITY");
 
-                    if (quantity > 0) {
-                        products.add(new Product(id, name, price, quantity, category));
-                    }
+                    products.add(new Product(id, name, price, quantity, category));
                 }
             }
             catch (SQLException e) {
