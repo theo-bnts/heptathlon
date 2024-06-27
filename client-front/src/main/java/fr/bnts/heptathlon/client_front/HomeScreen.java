@@ -16,15 +16,12 @@ public class HomeScreen {
         ecranAdministrateurButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Créer et afficher l'écran administrateur
                 AdminScreen adminScreen = new AdminScreen(parentFrame);
                 parentFrame.setContentPane(adminScreen.getPanel());
                 parentFrame.revalidate();
-                parentFrame.repaint();
+                parentFrame.pack();
             }
         });
-
-        // Vous pouvez ajouter d'autres écouteurs pour d'autres boutons ici
     }
 
     public JPanel getPanel() {

@@ -12,8 +12,6 @@ public class AdminScreen {
 
     public AdminScreen(JFrame frame) {
         this.parentFrame = frame;
-
-        // Vous pouvez ajouter des écouteurs pour les boutons ici
     }
 
     public JPanel getPanel() {
