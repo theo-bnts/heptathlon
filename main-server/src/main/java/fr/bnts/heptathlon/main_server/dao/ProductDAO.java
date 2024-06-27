@@ -13,7 +13,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class ProductDAO {
     public static Product get(String reference) throws SQLException {
         AtomicReference<Product> product = new AtomicReference<>();
-        Database.prepareQuery("SELECT * FROM PRODUCT WHERE REFERENCE = ?", preparedStatement -> {
+        Database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?",
+                preparedStatement -> {
             try {
                 preparedStatement.setString(1, reference);
 
@@ -22,9 +23,9 @@ public abstract class ProductDAO {
                     String name = resultSet.getString("NAME");
                     float price = resultSet.getFloat("PRICE");
                     int quantity = resultSet.getInt("QUANTITY");
-                    int idCategory = resultSet.getInt("ID_PRODUCT_CATEGORY");
+                    int categoryId = resultSet.getInt("ID_PRODUCT_CATEGORY");
 
-                    ProductCategory category = ProductCategoryDAO.get(idCategory);
+                    ProductCategory category = ProductCategoryDAO.get(categoryId);
 
                     product.set(new Product(reference, name, price, quantity, category));
                 }
@@ -44,13 +45,13 @@ public abstract class ProductDAO {
 
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    String reference = resultSet.getString("REFERENCE");
+                    String id = resultSet.getString("ID_PRODUCT");
                     String name = resultSet.getString("NAME");
                     float price = resultSet.getFloat("PRICE");
                     int quantity = resultSet.getInt("QUANTITY");
 
                     if (quantity > 0) {
-                        products.add(new Product(reference, name, price, quantity, category));
+                        products.add(new Product(id, name, price, quantity, category));
                     }
                 }
             }

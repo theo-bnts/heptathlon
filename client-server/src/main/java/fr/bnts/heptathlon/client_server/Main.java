@@ -12,6 +12,8 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        System.setProperty("java.rmi.server.useCodebaseOnly", "false");
+
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             Service service = (Service) registry.lookup("Service");

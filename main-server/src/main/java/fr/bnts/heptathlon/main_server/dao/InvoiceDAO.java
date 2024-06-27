@@ -15,7 +15,7 @@ public abstract class InvoiceDAO {
         Database.executeQuery("SELECT * FROM INVOICE", resultSet -> {
             try {
                 while (resultSet.next()) {
-                    int id = resultSet.getInt("ID_INVOICE");
+                    String id = resultSet.getString("ID_INVOICE");
                     LocalDateTime publishedDate =
                             resultSet.getTimestamp("PUBLISHED_DATE").toLocalDateTime();
                     float price = resultSet.getFloat("PRICE");
@@ -29,5 +29,23 @@ public abstract class InvoiceDAO {
             }
         });
         return invoices;
+    }
+
+    public static void add(Invoice invoice) throws SQLException {
+        Database.prepareQuery("INSERT INTO INVOICE (ID_INVOICE, " +
+                        "PUBLISHED_DATE, PRICE, PAYMENT_METHOD) VALUES (?, ?, ?)",
+                preparedStatement -> {
+            try {
+                preparedStatement.setString(1, invoice.getId());
+                preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(invoice.getPublishedDate()));
+                preparedStatement.setFloat(3, invoice.getPrice());
+                preparedStatement.setString(4, invoice.getPaymentMethod());
+
+                preparedStatement.executeUpdate();
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

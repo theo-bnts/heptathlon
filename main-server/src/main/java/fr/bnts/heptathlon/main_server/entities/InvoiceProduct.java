@@ -1,17 +1,20 @@
 package fr.bnts.heptathlon.main_server.entities;
 
-public class InvoiceProduct {
-    private int id;
-    private int checkoutId;
+import java.io.Serializable;
+
+public class InvoiceProduct implements Serializable {
+    private String id;
+    private String checkoutId;
     private float price;
     private int quantity;
     private Product product;
+    private Invoice invoice;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public int getCheckoutId() {
+    public String getCheckoutId() {
         return checkoutId;
     }
 
@@ -27,12 +30,18 @@ public class InvoiceProduct {
         return product;
     }
 
-    public InvoiceProduct(int id, int checkoutId, float price, int quantity, Product product) {
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public InvoiceProduct(String id, String checkoutId, float price,
+                          int quantity, Product product, Invoice invoice) {
         this.id = id;
         this.checkoutId = checkoutId;
         this.price = price;
         this.quantity = quantity;
         this.product = product;
+        this.invoice = invoice;
     }
 
     @Override
@@ -43,6 +52,7 @@ public class InvoiceProduct {
                 ", price=" + price +
                 ", quantity=" + quantity +
                 ", product=" + product +
+                ", invoice=" + invoice +
                 '}';
     }
 }
