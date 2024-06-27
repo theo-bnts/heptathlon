@@ -18,7 +18,10 @@ public interface Service extends Remote {
     List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException;
 
     List<Invoice> getInvoices() throws RemoteException, SQLException;
+    void addInvoice(Invoice invoice) throws RemoteException, SQLException;
 
+    List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException;
     List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException,
             SQLException;
+    void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException;
 }

@@ -45,7 +45,22 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
+    public void addInvoice(Invoice invoice) throws RemoteException, SQLException {
+        InvoiceDAO.add(invoice);
+    }
+
+    @Override
+    public List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException {
+        return InvoiceProductDAO.get(checkoutId);
+    }
+
+    @Override
     public List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException, SQLException {
         return InvoiceProductDAO.get(invoice);
+    }
+
+    @Override
+    public void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException {
+        InvoiceProductDAO.add(invoiceProduct);
     }
 }
