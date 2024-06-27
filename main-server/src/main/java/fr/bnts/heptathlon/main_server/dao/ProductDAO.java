@@ -2,7 +2,7 @@ package fr.bnts.heptathlon.main_server.dao;
 
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.tools.Database;
+import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +11,28 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ProductDAO {
+    public static List<Product> get(Database database) throws SQLException {
+        List<Product> products = new ArrayList<>();
+        database.executeQuery("SELECT * FROM PRODUCT", resultSet -> {
+            try {
+                while (resultSet.next()) {
+                    String id = resultSet.getString("ID_PRODUCT");
+                    String name = resultSet.getString("NAME");
+                    float price = resultSet.getFloat("PRICE");
+                    int quantity = resultSet.getInt("QUANTITY");
+                    int categoryId = resultSet.getInt("ID_PRODUCT_CATEGORY");
+
+                    ProductCategory category =
+                            ProductCategoryDAO.get(database, categoryId);
+                }
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return products;
+    }
+
     public static Product get(Database database, String reference) throws SQLException {
         AtomicReference<Product> product = new AtomicReference<>();
         database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?",

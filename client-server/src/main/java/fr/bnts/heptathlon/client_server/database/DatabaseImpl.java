@@ -1,13 +1,16 @@
-package fr.bnts.heptathlon.main_server.tools;
+package fr.bnts.heptathlon.client_server.database;
+
+import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.io.Serializable;
 import java.sql.*;
 import java.util.function.Consumer;
 
 public class DatabaseImpl implements Database, Serializable {
-    public static final String URL = "jdbc:mysql://localhost:3308/main_server";
-    public static final String USER = "main_server";
-    public static final String PASSWORD = "main_server";
+    public static final String URL = "jdbc:mysql://localhost:3307" +
+            "/client_server";
+    public static final String USER = "client_server";
+    public static final String PASSWORD = "client_server";
 
     public Connection connection;
 

@@ -9,7 +9,7 @@ import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.tools.Database;
+import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.io.IOException;
 import java.rmi.server.UnicastRemoteObject;
@@ -40,6 +40,11 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     @Override
     public Product getProduct(Database database, String id) throws RemoteException, SQLException {
         return ProductDAO.get(database, id);
+    }
+
+    @Override
+    public List<Product> getProducts(Database database) throws RemoteException, SQLException {
+        return ProductDAO.get(database);
     }
 
     @Override

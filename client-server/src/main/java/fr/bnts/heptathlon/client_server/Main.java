@@ -1,16 +1,16 @@
 package fr.bnts.heptathlon.client_server;
 
-import fr.bnts.heptathlon.main_server.dao.ProductCategoryDAO;
-import fr.bnts.heptathlon.main_server.dao.ProductDAO;
+import fr.bnts.heptathlon.client_server.database.DatabaseImpl;
+import fr.bnts.heptathlon.client_server.tools.DatabaseSynchronisation;
+import fr.bnts.heptathlon.client_server.tools.InvoiceFileWriter;
+import fr.bnts.heptathlon.client_server.tools.ServiceConnector;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
-import fr.bnts.heptathlon.main_server.rmi.Service;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.tools.Database;
+import fr.bnts.heptathlon.main_server.rmi.Service;
+import fr.bnts.heptathlon.main_server.database.Database;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -18,31 +18,22 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         try {
-            Registry mainServerRegistry = LocateRegistry.getRegistry("localhost", 1099);
-            Service mainServerService = (Service) mainServerRegistry.lookup("Service");
+            Service mainServerService = ServiceConnector.connect();
 
-            Database mainServerDatabase = new fr.bnts.heptathlon.main_server.tools.DatabaseImpl();
-            Database clientServerDatabase = new fr.bnts.heptathlon.client_server.tools.DatabaseImpl();
+            Database mainServerDatabase = new fr.bnts.heptathlon.main_server.database.DatabaseImpl();
+
+            Database clientServerDatabase = new DatabaseImpl();
 
             System.out.println("Sync products from main server");
 
-            List<ProductCategory> productCategories =
-                    mainServerService.getProductCategories(mainServerDatabase);
-
-            for (ProductCategory productCategory : productCategories) {
-                ProductCategoryDAO.add(clientServerDatabase, productCategory);
-            }
-
-            List<Product> products = mainServerService.getProducts(mainServerDatabase,
-                    productCategories.getFirst());
-
-            for (Product product : products) {
-                ProductDAO.add(clientServerDatabase, product);
-            }
+            new DatabaseSynchronisation(mainServerService, clientServerDatabase)
+                    .synchronise();
 
             System.out.println("Add two invoice products");
 
             String checkoutId = UUID.randomUUID().toString();
+
+            List<Product> products = mainServerService.getProducts(mainServerDatabase);
 
             InvoiceProduct invoiceProductA = new InvoiceProduct(
                     UUID.randomUUID().toString(),
@@ -92,6 +83,9 @@ public class Main {
             }
 
             System.out.println("Send invoice test file");
+
+            InvoiceFileWriter.write(clientServerDatabase, "client-server",
+                    invoices.getFirst());
 
             byte[] file = mainServerService.readInvoiceFile("client-server",
                     invoices.getFirst());

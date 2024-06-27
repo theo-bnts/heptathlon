@@ -4,7 +4,7 @@ import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.tools.Database;
+import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -18,6 +18,7 @@ public interface Service extends Remote {
     void addProductCategory(Database database, ProductCategory productCategory) throws RemoteException, SQLException;
 
     Product getProduct(Database database, String id) throws RemoteException, SQLException;
+    List<Product> getProducts(Database database) throws RemoteException, SQLException;
     List<Product> getProducts(Database database, ProductCategory category) throws RemoteException, SQLException;
     void addProduct(Database database, Product product) throws RemoteException, SQLException;
 

@@ -1,4 +1,4 @@
-package fr.bnts.heptathlon.main_server.tools;
+package fr.bnts.heptathlon.main_server.database;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

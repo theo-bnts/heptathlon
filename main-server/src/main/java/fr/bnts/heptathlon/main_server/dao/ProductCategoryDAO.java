@@ -1,7 +1,7 @@
 package fr.bnts.heptathlon.main_server.dao;
 
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.tools.Database;
+import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.sql.*;
 import java.util.ArrayList;

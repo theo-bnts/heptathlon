@@ -3,7 +3,7 @@ package fr.bnts.heptathlon.main_server.dao;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
-import fr.bnts.heptathlon.main_server.tools.Database;
+import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
