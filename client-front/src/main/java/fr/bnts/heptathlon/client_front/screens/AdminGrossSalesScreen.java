@@ -17,12 +17,10 @@ public class AdminGrossSalesScreen {
     private JLabel resultLabel;
 
     public AdminGrossSalesScreen() {
-        // Initialisation des DatePickers
         JDateComponentFactory factory = new JDateComponentFactory();
         datePicker1 = factory.createJDatePicker();
         datePicker2 = factory.createJDatePicker();
 
-        // Initialisation des autres composants
         validateButton = new JButton("Valider");
         resultLabel = new JLabel("");
 
