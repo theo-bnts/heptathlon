@@ -6,14 +6,15 @@ import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        System.setProperty("java.rmi.server.useCodebaseOnly", "false");
-
         try {
             Registry registry = LocateRegistry.getRegistry("localhost", 1099);
             Service service = (Service) registry.lookup("Service");
@@ -49,6 +50,16 @@ public class Main {
             for (InvoiceProduct invoiceProduct : invoiceProducts) {
                 System.out.println(invoiceProduct);
             }
+
+            System.out.println("Send invoice test file");
+
+            Path fileFullPath =
+                    Paths.get("../client-server/src/main/resources" +
+                            "/test-invoice.txt");
+
+            byte[] file = Files.readAllBytes(fileFullPath);
+
+            service.sendInvoiceFile(invoices.getFirst(), file);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -5,6 +5,7 @@ import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -17,11 +18,13 @@ public interface Service extends Remote {
     Product getProduct(String id) throws RemoteException, SQLException;
     List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException;
 
-    List<Invoice> getInvoices() throws RemoteException, SQLException;
-    void addInvoice(Invoice invoice) throws RemoteException, SQLException;
-
     List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException;
     List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException,
             SQLException;
     void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException;
+
+    List<Invoice> getInvoices() throws RemoteException, SQLException;
+    void addInvoice(Invoice invoice) throws RemoteException, SQLException;
+
+    void sendInvoiceFile(Invoice invoice, byte[] file) throws IOException;
 }

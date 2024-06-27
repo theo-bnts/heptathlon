@@ -80,6 +80,29 @@ public abstract class InvoiceProductDAO {
                 preparedStatement.setString(5, invoiceProduct.getProduct().getId());
                 preparedStatement.setString(6, invoiceProduct.getInvoice() != null ? invoiceProduct.getInvoice().getId() : null);
                 preparedStatement.setInt(7, invoiceProduct.getProduct().getCategory().getId());
+
+                preparedStatement.executeUpdate();
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public static void update(InvoiceProduct invoiceProduct) throws SQLException {
+        Database.prepareQuery("UPDATE INVOICE_PRODUCT SET CHECKOUT_ID = ?, PRICE = ?, " +
+                        "QUANTITY = ?, REFERENCE = ?, ID_INVOICE = ?, ID_PRODUCT = ? WHERE " +
+                        "ID_INVOICE_PRODUCT = ?",
+                preparedStatement -> {
+            try {
+                preparedStatement.setString(1, invoiceProduct.getCheckoutId());
+                preparedStatement.setFloat(2, invoiceProduct.getPrice());
+                preparedStatement.setInt(3, invoiceProduct.getQuantity());
+                preparedStatement.setString(4, invoiceProduct.getProduct().getId());
+                preparedStatement.setString(5, invoiceProduct.getInvoice() != null ? invoiceProduct.getInvoice().getId() : null);
+                preparedStatement.setInt(6, invoiceProduct.getProduct().getCategory().getId());
+                preparedStatement.setString(7, invoiceProduct.getId());
+
                 preparedStatement.executeUpdate();
             }
             catch (SQLException e) {

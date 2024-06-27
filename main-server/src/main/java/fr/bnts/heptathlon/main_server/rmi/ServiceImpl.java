@@ -1,6 +1,7 @@
 package fr.bnts.heptathlon.main_server.rmi;
 
 import fr.bnts.heptathlon.main_server.dao.InvoiceDAO;
+import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.dao.InvoiceProductDAO;
 import fr.bnts.heptathlon.main_server.dao.ProductCategoryDAO;
 import fr.bnts.heptathlon.main_server.dao.ProductDAO;
@@ -9,6 +10,7 @@ import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
+import java.io.IOException;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -40,16 +42,6 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
-    public List<Invoice> getInvoices() throws RemoteException, SQLException {
-        return InvoiceDAO.get();
-    }
-
-    @Override
-    public void addInvoice(Invoice invoice) throws RemoteException, SQLException {
-        InvoiceDAO.add(invoice);
-    }
-
-    @Override
     public List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException {
         return InvoiceProductDAO.get(checkoutId);
     }
@@ -62,5 +54,20 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     @Override
     public void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException {
         InvoiceProductDAO.add(invoiceProduct);
+    }
+
+    @Override
+    public List<Invoice> getInvoices() throws RemoteException, SQLException {
+        return InvoiceDAO.get();
+    }
+
+    @Override
+    public void addInvoice(Invoice invoice) throws RemoteException, SQLException {
+        InvoiceDAO.add(invoice);
+    }
+
+    @Override
+    public void sendInvoiceFile(Invoice invoice, byte[] file) throws IOException {
+        InvoiceFileDAO.send(invoice, file);
     }
 }
