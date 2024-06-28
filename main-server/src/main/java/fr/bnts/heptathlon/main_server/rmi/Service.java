@@ -25,6 +25,8 @@ public interface Service extends Remote {
 
     List<Product> getProducts(Database database, ProductCategory category) throws RemoteException, SQLException;
 
+    void updateProduct(Database database, Product product) throws RemoteException, SQLException;
+
     void addProduct(Database database, Product product) throws RemoteException, SQLException;
 
     List<InvoiceProduct> getInvoiceProducts(Database database, String checkoutId) throws RemoteException, SQLException;
@@ -33,6 +35,8 @@ public interface Service extends Remote {
             SQLException;
 
     void addInvoiceProduct(Database database, InvoiceProduct invoiceProduct) throws RemoteException, SQLException;
+
+    Invoice getInvoice(Database database, String id) throws RemoteException, SQLException;
 
     List<Invoice> getInvoices(Database database) throws RemoteException, SQLException;
 

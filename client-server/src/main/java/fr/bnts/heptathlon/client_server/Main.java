@@ -1,9 +1,9 @@
 package fr.bnts.heptathlon.client_server;
 
 import fr.bnts.heptathlon.client_server.database.DatabaseImpl;
-import fr.bnts.heptathlon.client_server.tools.DatabaseSynchronisation;
+import fr.bnts.heptathlon.client_server.rmi.ServiceConnector;
+import fr.bnts.heptathlon.client_server.tools.DataSynchronisation;
 import fr.bnts.heptathlon.client_server.tools.InvoiceFileWriter;
-import fr.bnts.heptathlon.client_server.tools.ServiceConnector;
 import fr.bnts.heptathlon.main_server.database.Database;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Main {
     public static void main(String[] args) {
         try {
-            Service mainServerService = ServiceConnector.connect();
+            Service mainServerService = ServiceConnector.connectToRemote();
 
             Database mainServerDatabase = new fr.bnts.heptathlon.main_server.database.DatabaseImpl();
 
@@ -25,7 +25,7 @@ public class Main {
 
             System.out.println("Sync products from main server");
 
-            new DatabaseSynchronisation(mainServerService, mainServerDatabase, clientServerDatabase)
+            new DataSynchronisation(mainServerService, mainServerDatabase, clientServerDatabase)
                     .synchronise();
 
             System.out.println("Add two invoice products");

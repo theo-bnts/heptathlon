@@ -49,6 +49,11 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
+    public void updateProduct(Database database, Product product) throws RemoteException, SQLException {
+        ProductDAO.update(database, product);
+    }
+
+    @Override
     public void addProduct(Database database, Product product) throws RemoteException, SQLException {
         ProductDAO.add(database, product);
     }
@@ -66,6 +71,11 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     @Override
     public void addInvoiceProduct(Database database, InvoiceProduct invoiceProduct) throws RemoteException, SQLException {
         InvoiceProductDAO.add(database, invoiceProduct);
+    }
+
+    @Override
+    public Invoice getInvoice(Database database, String id) throws RemoteException, SQLException {
+        return InvoiceDAO.get(database, id);
     }
 
     @Override

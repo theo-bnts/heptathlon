@@ -10,6 +10,23 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ProductCategoryDAO {
+    public static List<ProductCategory> get(Database database) throws SQLException {
+        List<ProductCategory> categories = new ArrayList<>();
+        database.executeQuery("SELECT * FROM PRODUCT_CATEGORY", resultSet -> {
+            try {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("ID_PRODUCT_CATEGORY");
+                    String name = resultSet.getString("NAME");
+
+                    categories.add(new ProductCategory(id, name));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return categories;
+    }
+
     public static ProductCategory get(Database database, int idCategory) throws SQLException {
         AtomicReference<ProductCategory> category = new AtomicReference<>();
         database.prepareQuery("SELECT NAME FROM PRODUCT WHERE " +
@@ -29,23 +46,6 @@ public abstract class ProductCategoryDAO {
                     }
                 });
         return category.get();
-    }
-
-    public static List<ProductCategory> get(Database database) throws SQLException {
-        List<ProductCategory> categories = new ArrayList<>();
-        database.executeQuery("SELECT * FROM PRODUCT_CATEGORY", resultSet -> {
-            try {
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("ID_PRODUCT_CATEGORY");
-                    String name = resultSet.getString("NAME");
-
-                    categories.add(new ProductCategory(id, name));
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        return categories;
     }
 
     public static void add(Database database, ProductCategory category) throws SQLException {
