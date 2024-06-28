@@ -9,14 +9,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class AdminGrossSalesScreen {
+public class AdminGrossSalesTab {
     private JPanel panel1;
     private JDatePicker datePicker1;
     private JDatePicker datePicker2;
     private JButton validateButton;
     private JLabel resultLabel;
 
-    public AdminGrossSalesScreen() {
+    public AdminGrossSalesTab() {
         JDateComponentFactory factory = new JDateComponentFactory();
         datePicker1 = factory.createJDatePicker();
         datePicker2 = factory.createJDatePicker();

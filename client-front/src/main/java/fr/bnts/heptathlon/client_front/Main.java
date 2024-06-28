@@ -2,7 +2,7 @@ package fr.bnts.heptathlon.client_front;
 
 import fr.bnts.heptathlon.client_front.screens.AdminHomeScreen;
 import fr.bnts.heptathlon.client_front.screens.HomeScreen;
-import fr.bnts.heptathlon.client_front.screens.StoreHomeScreeen;
+import fr.bnts.heptathlon.client_front.screens.StoreHomeScreen;
 
 import javax.swing.*;
 
@@ -53,8 +53,8 @@ public class Main {
         });
 
         homeScreen.getEcranCaisseButton().addActionListener(e -> {
-            StoreHomeScreeen storeHomeScreeen = new StoreHomeScreeen();
-            setScreen(frame, storeHomeScreeen.getPanel());
+            StoreHomeScreen storeHomeScreen = new StoreHomeScreen();
+            setScreen(frame, storeHomeScreen.getPanel());
         });
     }
 }
