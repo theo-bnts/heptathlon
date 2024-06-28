@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public class InvoiceFileDAO {
     public static String getFullPath(String packageName, Invoice invoice) {
-        return "../" + packageName + "/src/main/resources" +
+        return "./" + packageName + "/src/main/resources" +
                 "/" + invoice.getId() + ".txt";
     }
 
