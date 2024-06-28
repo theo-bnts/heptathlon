@@ -31,7 +31,7 @@ public class Main {
         System.out.println("Synchronise databases");
 
         new DataSynchronisation(mainServerService, mainServerDatabase, clientServerDatabase)
-                .synchronise();
+                .startSynchronisation();
 
         System.out.println("----- EXAMPLE -----");
 

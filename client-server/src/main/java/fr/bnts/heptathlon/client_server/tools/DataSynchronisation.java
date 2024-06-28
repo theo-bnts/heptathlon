@@ -30,7 +30,7 @@ public class DataSynchronisation {
         synchroniseProductsFromRemote();
     }
 
-    public void synchronise() throws SQLException, IOException {
+    public void startSynchronisation() throws SQLException, IOException {
         synchronisePricesFromRemote();
         synchroniseInvoicesToRemote();
     }
