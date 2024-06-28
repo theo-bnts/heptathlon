@@ -11,28 +11,65 @@ import fr.bnts.heptathlon.main_server.rmi.Service;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class DataSynchronisation {
     Service remoteService;
     Database remoteDatabase;
     Database database;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public DataSynchronisation(Service remoteService,
                                Database remoteDatabase, Database database) {
         this.remoteService = remoteService;
         this.remoteDatabase = remoteDatabase;
         this.database = database;
+
+        scheduleTasks();
+    }
+
+    private void scheduleTasks() {
+        Runnable pricesTask = () -> {
+            try {
+                System.out.println("Synchronising prices from remote");
+                synchronisePricesFromRemote();
+            } catch (SQLException | RemoteException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Runnable invoicesTask = () -> {
+            try {
+                System.out.println("Synchronising invoices to remote");
+                synchroniseInvoicesToRemote();
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
+        };
+
+        long initialDelayPrices = calculateInitialDelay(LocalTime.of(18, 2));
+        long initialDelayInvoices = calculateInitialDelay(LocalTime.of(22, 0));
+
+        scheduler.scheduleAtFixedRate(pricesTask, initialDelayPrices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(invoicesTask, initialDelayInvoices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);
+    }
+
+    private long calculateInitialDelay(LocalTime targetTime) {
+        LocalTime now = LocalTime.now();
+        if (now.isAfter(targetTime)) {
+            targetTime = targetTime.plusHours(24);
+        }
+        return Duration.between(now, targetTime).toMillis();
     }
 
     public void initialiseDatabase() throws SQLException, RemoteException {
         synchroniseProductCategoriesFromRemote();
         synchroniseProductsFromRemote();
-    }
-
-    public void startSynchronisation() throws SQLException, IOException {
-        synchronisePricesFromRemote();
-        synchroniseInvoicesToRemote();
     }
 
     public void synchroniseProductCategoriesFromRemote() throws SQLException, RemoteException {

@@ -28,10 +28,7 @@ public class Main {
 
         Database clientServerDatabase = new DatabaseImpl();
 
-        System.out.println("Synchronise databases");
-
-        new DataSynchronisation(mainServerService, mainServerDatabase, clientServerDatabase)
-                .startSynchronisation();
+        new DataSynchronisation(mainServerService, mainServerDatabase, clientServerDatabase);
 
         System.out.println("----- EXAMPLE -----");
 
