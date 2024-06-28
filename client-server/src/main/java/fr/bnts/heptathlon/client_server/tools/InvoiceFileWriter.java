@@ -45,7 +45,7 @@ public abstract class InvoiceFileWriter {
                     .append(invoiceProduct.getQuantity())
                     .append(" x ")
                     .append(invoiceProduct.getProduct().getName())
-                    .append("\t")
+                    .append("\t= ")
                     .append(invoiceProduct.getProduct().getPrice() * invoiceProduct.getQuantity())
                     .append("$\n");
         }
