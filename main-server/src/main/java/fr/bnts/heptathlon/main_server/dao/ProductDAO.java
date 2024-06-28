@@ -1,8 +1,8 @@
 package fr.bnts.heptathlon.main_server.dao;
 
+import fr.bnts.heptathlon.main_server.database.Database;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,8 +27,7 @@ public abstract class ProductDAO {
 
                     products.add(new Product(id, name, price, quantity, category));
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -39,26 +38,25 @@ public abstract class ProductDAO {
         AtomicReference<Product> product = new AtomicReference<>();
         database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?",
                 preparedStatement -> {
-            try {
-                preparedStatement.setString(1, productId);
+                    try {
+                        preparedStatement.setString(1, productId);
 
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next()) {
-                    String name = resultSet.getString("NAME");
-                    float price = resultSet.getFloat("PRICE");
-                    int quantity = resultSet.getInt("QUANTITY");
-                    int categoryId = resultSet.getInt("ID_PRODUCT_CATEGORY");
+                        ResultSet resultSet = preparedStatement.executeQuery();
+                        if (resultSet.next()) {
+                            String name = resultSet.getString("NAME");
+                            float price = resultSet.getFloat("PRICE");
+                            int quantity = resultSet.getInt("QUANTITY");
+                            int categoryId = resultSet.getInt("ID_PRODUCT_CATEGORY");
 
-                    ProductCategory category =
-                            ProductCategoryDAO.get(database, categoryId);
+                            ProductCategory category =
+                                    ProductCategoryDAO.get(database, categoryId);
 
-                    product.set(new Product(productId, name, price, quantity, category));
-                }
-            }
-            catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                            product.set(new Product(productId, name, price, quantity, category));
+                        }
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
         return product.get();
     }
 
@@ -79,29 +77,45 @@ public abstract class ProductDAO {
 
                     products.add(new Product(id, name, price, quantity, category));
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
         return products;
     }
 
+    public static void update(Database database, Product product) throws SQLException {
+        database.prepareQuery("UPDATE PRODUCT SET NAME = ?, PRICE = ?, QUANTITY = ?, ID_PRODUCT_CATEGORY = ? WHERE ID_PRODUCT = ?",
+                preparedStatement -> {
+                    try {
+                        preparedStatement.setString(1, product.getName());
+                        preparedStatement.setFloat(2, product.getPrice());
+                        preparedStatement.setInt(3, product.getQuantity());
+                        preparedStatement.setInt(4, product.getCategory().getId());
+
+                        preparedStatement.setString(5, product.getId());
+
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
     public static void add(Database database, Product product) throws SQLException {
         database.prepareQuery("INSERT INTO PRODUCT (ID_PRODUCT, NAME, PRICE, QUANTITY, ID_PRODUCT_CATEGORY) VALUES (?, ?, ?, ?, ?)",
                 preparedStatement -> {
-            try {
-                preparedStatement.setString(1, product.getId());
-                preparedStatement.setString(2, product.getName());
-                preparedStatement.setFloat(3, product.getPrice());
-                preparedStatement.setInt(4, product.getQuantity());
-                preparedStatement.setInt(5, product.getCategory().getId());
+                    try {
+                        preparedStatement.setString(1, product.getId());
+                        preparedStatement.setString(2, product.getName());
+                        preparedStatement.setFloat(3, product.getPrice());
+                        preparedStatement.setInt(4, product.getQuantity());
+                        preparedStatement.setInt(5, product.getCategory().getId());
 
-                preparedStatement.executeUpdate();
-            }
-            catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }

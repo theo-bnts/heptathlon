@@ -1,9 +1,10 @@
 package fr.bnts.heptathlon.main_server.dao;
 
-import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 import fr.bnts.heptathlon.main_server.database.Database;
+import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -23,8 +24,7 @@ public abstract class ProductCategoryDAO {
 
                             category.set(new ProductCategory(idCategory, name));
                         }
-                    }
-                    catch (SQLException e) {
+                    } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
                 });
@@ -41,8 +41,7 @@ public abstract class ProductCategoryDAO {
 
                     categories.add(new ProductCategory(id, name));
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -57,8 +56,7 @@ public abstract class ProductCategoryDAO {
                         preparedStatement.setString(2, category.getName());
 
                         preparedStatement.executeUpdate();
-                    }
-                    catch (SQLException e) {
+                    } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
                 });

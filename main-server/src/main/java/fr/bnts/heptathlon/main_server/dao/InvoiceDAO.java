@@ -1,7 +1,7 @@
 package fr.bnts.heptathlon.main_server.dao;
 
-import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.database.Database;
+import fr.bnts.heptathlon.main_server.entities.Invoice;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -22,8 +22,7 @@ public abstract class InvoiceDAO {
 
                     invoices.add(new Invoice(id, publishedDate, price, paymentMethod));
                 }
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -34,17 +33,16 @@ public abstract class InvoiceDAO {
         database.prepareQuery("INSERT INTO INVOICE (ID_INVOICE, " +
                         "PUBLISHED_DATE, PRICE, PAYMENT_METHOD) VALUES (?, ?, ?, ?)",
                 preparedStatement -> {
-            try {
-                preparedStatement.setString(1, invoice.getId());
-                preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(invoice.getPublishedDate()));
-                preparedStatement.setFloat(3, invoice.getPrice());
-                preparedStatement.setString(4, invoice.getPaymentMethod());
+                    try {
+                        preparedStatement.setString(1, invoice.getId());
+                        preparedStatement.setTimestamp(2, java.sql.Timestamp.valueOf(invoice.getPublishedDate()));
+                        preparedStatement.setFloat(3, invoice.getPrice());
+                        preparedStatement.setString(4, invoice.getPaymentMethod());
 
-                preparedStatement.executeUpdate();
-            }
-            catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }

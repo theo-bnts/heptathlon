@@ -9,6 +9,15 @@ public class Product implements Serializable {
     private int quantity;
     private ProductCategory category;
 
+    public Product(String id, String name, float price, int quantity,
+                   ProductCategory category) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+    }
+
     public String getId() {
         return id;
     }
@@ -27,15 +36,6 @@ public class Product implements Serializable {
 
     public ProductCategory getCategory() {
         return category;
-    }
-
-    public Product(String id, String name, float price, int quantity,
-                   ProductCategory category) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.category = category;
     }
 
     @Override

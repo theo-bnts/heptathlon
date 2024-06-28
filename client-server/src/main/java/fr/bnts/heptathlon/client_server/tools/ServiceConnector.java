@@ -10,6 +10,6 @@ import java.rmi.registry.Registry;
 public abstract class ServiceConnector {
     public static Service connect() throws NotBoundException, RemoteException {
         Registry mainServerRegistry = LocateRegistry.getRegistry("localhost", 1099);
-        return (Service)mainServerRegistry.lookup("Service");
+        return (Service) mainServerRegistry.lookup("Service");
     }
 }

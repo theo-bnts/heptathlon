@@ -4,12 +4,11 @@ import fr.bnts.heptathlon.client_server.database.DatabaseImpl;
 import fr.bnts.heptathlon.client_server.tools.DatabaseSynchronisation;
 import fr.bnts.heptathlon.client_server.tools.InvoiceFileWriter;
 import fr.bnts.heptathlon.client_server.tools.ServiceConnector;
+import fr.bnts.heptathlon.main_server.database.Database;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
-import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 import fr.bnts.heptathlon.main_server.rmi.Service;
-import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +37,7 @@ public class Main {
             InvoiceProduct invoiceProductA = new InvoiceProduct(
                     UUID.randomUUID().toString(),
                     checkoutId,
-                    (float)3,
+                    (float) 3,
                     2,
                     products.getFirst()
             );
@@ -48,7 +47,7 @@ public class Main {
             InvoiceProduct invoiceProductB = new InvoiceProduct(
                     UUID.randomUUID().toString(),
                     checkoutId,
-                    (float)6,
+                    (float) 6,
                     3,
                     products.get(1)
             );
@@ -60,7 +59,7 @@ public class Main {
             Invoice invoice = new Invoice(
                     checkoutId,
                     LocalDateTime.now(),
-                    (float)24,
+                    (float) 24,
                     "CARD"
             );
 

@@ -1,19 +1,15 @@
 package fr.bnts.heptathlon.main_server.rmi;
 
-import fr.bnts.heptathlon.main_server.dao.InvoiceDAO;
-import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
-import fr.bnts.heptathlon.main_server.dao.InvoiceProductDAO;
-import fr.bnts.heptathlon.main_server.dao.ProductCategoryDAO;
-import fr.bnts.heptathlon.main_server.dao.ProductDAO;
+import fr.bnts.heptathlon.main_server.dao.*;
+import fr.bnts.heptathlon.main_server.database.Database;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
-import fr.bnts.heptathlon.main_server.database.Database;
 
 import java.io.IOException;
-import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -94,7 +90,7 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
 
     @Override
     public void writeInvoiceFile(String packageName, Invoice invoice,
-                                byte[] file) throws IOException {
+                                 byte[] file) throws IOException {
         InvoiceFileDAO.write(packageName, invoice, file);
     }
 }

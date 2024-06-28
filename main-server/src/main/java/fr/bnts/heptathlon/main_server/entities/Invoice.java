@@ -9,6 +9,14 @@ public class Invoice implements Serializable {
     private float price;
     private String paymentMethod;
 
+    public Invoice(String id, LocalDateTime publishedDate, float price,
+                   String paymentMethod) {
+        this.id = id;
+        this.publishedDate = publishedDate;
+        this.price = price;
+        this.paymentMethod = paymentMethod;
+    }
+
     public String getId() {
         return id;
     }
@@ -23,14 +31,6 @@ public class Invoice implements Serializable {
 
     public String getPaymentMethod() {
         return paymentMethod;
-    }
-
-    public Invoice(String id, LocalDateTime publishedDate, float price,
-                   String paymentMethod) {
-        this.id = id;
-        this.publishedDate = publishedDate;
-        this.price = price;
-        this.paymentMethod = paymentMethod;
     }
 
     @Override
