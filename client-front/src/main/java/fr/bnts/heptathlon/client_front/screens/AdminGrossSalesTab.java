@@ -15,7 +15,6 @@ public class AdminGrossSalesScreen {
     private JDatePicker datePicker2;
     private JButton validateButton;
     private JLabel resultLabel;
-    private JPanel test;
 
     public AdminGrossSalesScreen() {
         JDateComponentFactory factory = new JDateComponentFactory();
