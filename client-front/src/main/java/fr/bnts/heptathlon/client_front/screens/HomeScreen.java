@@ -1,7 +1,7 @@
 package fr.bnts.heptathlon.client_front.screens;
 
 import javax.swing.*;
-import fr.bnts.heptathlon.client_front.common.ButtonUtils;
+import fr.bnts.heptathlon.client_front.common.Buttons;
 
 public class HomeScreen {
     private JButton ecranCaisseButton;
@@ -10,8 +10,8 @@ public class HomeScreen {
     private JPanel panel1;
 
     public HomeScreen() {
-        ButtonUtils.setHomeButtonFont(ecranCaisseButton);
-        ButtonUtils.setHomeButtonFont(ecranAdministrateurButton);
+        Buttons.setHomeButtonFont(ecranCaisseButton);
+        Buttons.setHomeButtonFont(ecranAdministrateurButton);
     }
 
     public JPanel getPanel() {
