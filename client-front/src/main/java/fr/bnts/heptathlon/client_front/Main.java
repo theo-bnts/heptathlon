@@ -48,7 +48,12 @@ public class Main {
 
     private static void homeScreenListeners(JFrame frame, HomeScreen homeScreen) {
         homeScreen.getEcranAdministrateurButton().addActionListener(e -> {
-            AdminHomeScreen adminHomeScreen = new AdminHomeScreen();
+            AdminHomeScreen adminHomeScreen = null;
+            try {
+                adminHomeScreen = new AdminHomeScreen();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
             setScreen(frame, adminHomeScreen.getPanel());
         });
 

@@ -2,6 +2,9 @@ package fr.bnts.heptathlon.client_front.screens;
 
 import javax.swing.*;
 import java.awt.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 
 public class AdminHomeScreen {
     private JTabbedPane tabbedPane1;
@@ -11,7 +14,7 @@ public class AdminHomeScreen {
     private JPanel tabInvoices;
     private JPanel tabProduct;
 
-    public AdminHomeScreen() {
+    public AdminHomeScreen() throws SQLException, NotBoundException, RemoteException {
         tabbedPane1.setSelectedIndex(0);
 
         AdminGrossSalesTab adminGrossSalesTab = new AdminGrossSalesTab();
@@ -21,6 +24,10 @@ public class AdminHomeScreen {
         AdminStocksTab adminStocksTab = new AdminStocksTab();
         tabStocks.setLayout(new BorderLayout());
         tabStocks.add(adminStocksTab.getPanel(), BorderLayout.CENTER);
+
+        AdminInvoicesTab adminInvoicesTab = new AdminInvoicesTab();
+        tabInvoices.setLayout(new BorderLayout());
+        tabInvoices.add(adminInvoicesTab.getPanel(), BorderLayout.CENTER);
     }
 
     public JPanel getPanel() {

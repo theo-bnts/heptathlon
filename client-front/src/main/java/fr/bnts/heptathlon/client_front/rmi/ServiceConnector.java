@@ -8,7 +8,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public abstract class ServiceConnector {
-
     public static String REMOTE_HOST = "localhost";
     public static int REMOTE_PORT = 1099;
     public static String REMOTE_SERVICE_NAME = "Service";
