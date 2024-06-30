@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -209,7 +208,7 @@ public class StoreTab {
 
         JRadioButton cardButton = new JRadioButton("Carte");
         cardButton.setActionCommand("CARD");
-        JRadioButton chequeButton = new JRadioButton("Chèque ");
+        JRadioButton chequeButton = new JRadioButton("Chèque");
         chequeButton.setActionCommand("BANK_DRAFT");
 
         ButtonGroup paymentGroup = new ButtonGroup();
@@ -226,41 +225,32 @@ public class StoreTab {
 
         panel.add(buttonPanel);
 
-        ActionListener enablePayButtonListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                payButton.setEnabled(true);
-            }
-        };
+        ActionListener enablePayButtonListener = e -> payButton.setEnabled(true);
 
         cardButton.addActionListener(enablePayButtonListener);
         chequeButton.addActionListener(enablePayButtonListener);
 
-        int result = JOptionPane.showOptionDialog(
-                null,
-                panel,
-                "Paiement",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                new Object[]{payButton, "Annuler"},
-                null
-        );
+        JOptionPane optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, new Object[]{payButton, "Annuler"}, payButton);
+        JDialog dialog = optionPane.createDialog("Paiement");
 
-        if (result == JOptionPane.OK_OPTION) {
+        double finalTotal = total;
+        payButton.addActionListener(e -> {
             String selectedPaymentMethod = paymentGroup.getSelection().getActionCommand();
             try {
-                createInvoice(total, selectedPaymentMethod);
+                createInvoice(finalTotal, selectedPaymentMethod);
                 JOptionPane.showMessageDialog(null, "Paiement réussi !");
-                this.cart.clear();
-                this.updateCartList();
-                this.updateTotalCartLabel();
-                this.loadProducts();
-                this.updateValidCartButton();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                cart.clear();
+                updateCartList();
+                updateTotalCartLabel();
+                loadProducts();
+                updateValidCartButton();
+                dialog.dispose();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture: " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
-        }
+        });
+
+        dialog.setVisible(true);
     }
 
     private void createInvoice(double total, String paymentMethod) throws IOException, SQLException {
