@@ -31,7 +31,6 @@ public class Main {
 
         Service clientServerService = clientServerServiceConnector.connect();
 
-        // Create and show the main frame
         JFrame frame = new JFrame("Heptathlon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -70,7 +69,7 @@ public class Main {
 
     private static void homeScreenListeners(JFrame frame, HomeScreen homeScreen, Service clientServerService) {
         homeScreen.getEcranAdministrateurButton().addActionListener(e -> {
-            AdminHomeScreen adminHomeScreen = null;
+            AdminHomeScreen adminHomeScreen;
             try {
                 adminHomeScreen = new AdminHomeScreen(clientServerService);
             } catch (Exception ex) {
@@ -80,7 +79,7 @@ public class Main {
         });
 
         homeScreen.getEcranCaisseButton().addActionListener(e -> {
-            StoreHomeScreen storeHomeScreen = null;
+            StoreHomeScreen storeHomeScreen;
             try {
                 storeHomeScreen = new StoreHomeScreen(clientServerService);
             } catch (Exception ex) {

@@ -1,17 +1,18 @@
-package fr.bnts.heptathlon.client_server.tools;
+package fr.bnts.heptathlon.client_front.tools;
 
 import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.dao.InvoiceProductDAO;
 import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
+import fr.bnts.heptathlon.main_server.rmi.Service;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 public abstract class InvoiceFileWriter {
-    public static void write(DatabaseConnector database, String packageName,
+    public static void write(Service service, String packageName,
                              Invoice invoice) throws SQLException, IOException {
         StringBuilder content = new StringBuilder();
         content
@@ -39,7 +40,7 @@ public abstract class InvoiceFileWriter {
                 .append("Details: ")
                 .append("\n");
 
-        List<InvoiceProduct> invoiceProducts = InvoiceProductDAO.get(database, invoice);
+        List<InvoiceProduct> invoiceProducts = service.getInvoiceProducts(invoice);
 
         for (InvoiceProduct invoiceProduct : invoiceProducts) {
             content
@@ -48,7 +49,7 @@ public abstract class InvoiceFileWriter {
                     .append(invoiceProduct.getProduct().getName())
                     .append("\t= ")
                     .append(invoiceProduct.getProduct().getPrice() * invoiceProduct.getQuantity())
-                    .append("$\n");
+                    .append("€\n");
         }
 
         byte[] file = content.toString().getBytes();

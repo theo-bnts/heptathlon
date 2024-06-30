@@ -1,5 +1,7 @@
 package fr.bnts.heptathlon.client_front.screens;
 
+import fr.bnts.heptathlon.client_front.tools.InvoiceFileWriter;
+import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
@@ -12,6 +14,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -214,7 +217,7 @@ public class StoreHomeScreen {
         }
     }
 
-    private void createInvoice(double total, String paymentMethod) throws RemoteException, SQLException {
+    private void createInvoice(double total, String paymentMethod) throws IOException, SQLException {
         String invoiceId = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         Invoice invoice = new Invoice(invoiceId, now, (float) total, paymentMethod);
@@ -232,7 +235,16 @@ public class StoreHomeScreen {
             this.clientServerService.updateProduct(product);
         }
 
-        this.clientServerService.addInvoice(invoice);}
+        this.clientServerService.addInvoice(invoice);
+        writeInvoiceFile(invoice);
+    }
+
+    private void writeInvoiceFile(Invoice invoice) throws SQLException, IOException {
+        InvoiceFileWriter.write(this.clientServerService, "client-front", invoice);
+
+        byte[] file = InvoiceFileDAO.read("client-front", invoice);
+        this.clientServerService.writeInvoiceFile("client-server", invoice, file);
+    }
 
     public JPanel getPanel() {
         return panel;
