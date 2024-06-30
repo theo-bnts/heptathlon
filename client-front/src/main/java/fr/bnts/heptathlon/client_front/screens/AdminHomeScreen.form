@@ -38,7 +38,7 @@
           <grid id="d9a94" binding="tabInvoices" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="10" left="10" bottom="10" right="10"/>
             <constraints>
-              <tabbedpane title="Lister Factures"/>
+              <tabbedpane title="Factures"/>
             </constraints>
             <properties/>
             <border type="line" title-justification="2"/>

@@ -1,5 +1,6 @@
 package fr.bnts.heptathlon.client_front.screens;
 
+import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 
@@ -7,12 +8,18 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 public class AdminInvoicesTab {
     private JPanel panel1;
@@ -34,13 +41,47 @@ public class AdminInvoicesTab {
     private DefaultTreeModel createTreeModel(List<Invoice> invoices) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Factures");
 
+        DateTimeFormatter yearFormatter = DateTimeFormatter.ofPattern("yyyy");
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern(
+                "MMMM",
+                Locale.FRENCH
+        );
+        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
         for (Invoice invoice : invoices) {
+            LocalDate date = invoice.getPublishedDate().toLocalDate();
+            String year = date.format(yearFormatter);
+            String month = capitalize(date.format(monthFormatter));
+            String day = date.format(dayFormatter);
+            String time = invoice.getPublishedDate().toLocalTime().format(timeFormatter);
+
+            DefaultMutableTreeNode yearNode = findOrCreateChild(root, year);
+            DefaultMutableTreeNode monthNode = findOrCreateChild(yearNode, month);
+            DefaultMutableTreeNode dayNode = findOrCreateChild(monthNode, day);
+
             DefaultMutableTreeNode invoiceNode = new DefaultMutableTreeNode(
-                    invoice.getId() + " (Heure de publication: " + invoice.getPublishedDate() + ", Total: " + invoice.getPrice() + "$)"
+                    invoice.getId() + " (Heure: " + time + ", Total: " + invoice.getPrice() + ", Méthode de paiement: " + invoice.getPaymentMethod() + ")"
             );
-            root.add(invoiceNode);
+            dayNode.add(invoiceNode);
         }
         return new DefaultTreeModel(root);
+    }
+
+    private String capitalize(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
+    private DefaultMutableTreeNode findOrCreateChild(DefaultMutableTreeNode parent, String childName) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) parent.getChildAt(i);
+            if (childNode.getUserObject().equals(childName)) {
+                return childNode;
+            }
+        }
+        DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(childName);
+        parent.add(childNode);
+        return childNode;
     }
 
     private void addEventListeners() {
@@ -63,7 +104,7 @@ public class AdminInvoicesTab {
                 if (selectedInvoice != null) {
                     try {
                         openInvoiceFile(selectedInvoice);
-                    } catch (SQLException | NotBoundException | RemoteException ex) {
+                    } catch (SQLException | NotBoundException | IOException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -80,8 +121,27 @@ public class AdminInvoicesTab {
                 .orElse(null);
     }
 
-    private void openInvoiceFile(Invoice invoice) throws SQLException, RemoteException, NotBoundException {
-        System.out.println("Opening invoice file: " + invoice.getId());
+    private void openInvoiceFile(Invoice invoice) throws SQLException, IOException, NotBoundException {
+        byte[] invoiceFile = clientServerService.readInvoiceFile(
+                "client-server",
+                invoice
+        );
+
+        InvoiceFileDAO.write("client-front", invoice, invoiceFile);
+
+        String invoiceFileFullPath = InvoiceFileDAO.getFullPath("client-front", invoice);
+
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(new File(invoiceFileFullPath));
+        }
+        else {
+            JOptionPane.showMessageDialog(
+                    panel1,
+                    "Desktop n'est pas supporté",
+                    "Impossible d'ouvrir le fichier",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     public JPanel getPanel() {
