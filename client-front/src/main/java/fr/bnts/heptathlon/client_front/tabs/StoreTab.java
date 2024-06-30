@@ -237,6 +237,7 @@ public class StoreTab {
                 this.updateCartList();
                 this.updateTotalCartLabel();
                 this.loadProducts();
+                this.updateValidCartButton();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
