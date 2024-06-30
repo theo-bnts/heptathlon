@@ -3,13 +3,35 @@ package fr.bnts.heptathlon.client_front;
 import fr.bnts.heptathlon.client_front.screens.AdminHomeScreen;
 import fr.bnts.heptathlon.client_front.screens.HomeScreen;
 import fr.bnts.heptathlon.client_front.screens.StoreHomeScreen;
+import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
+import fr.bnts.heptathlon.main_server.rmi.Service;
+import fr.bnts.heptathlon.main_server.rmi.ServiceConnector;
 
 import javax.swing.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NotBoundException, RemoteException {
         setUILook();
 
+        DatabaseConnector clientServerDatabase = new DatabaseConnector(
+                "localhost",
+                3307,
+                "client_server",
+                "client_server",
+                "client_server"
+        );
+
+        ServiceConnector clientServerServiceConnector = new ServiceConnector(
+                1100,
+                "client_server",
+                clientServerDatabase
+        );
+
+        Service clientServerService = clientServerServiceConnector.connect();
+
+        // Create and show the main frame
         JFrame frame = new JFrame("Heptathlon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -21,7 +43,7 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        homeScreenListeners(frame, homeScreen);
+        homeScreenListeners(frame, homeScreen, clientServerService);
     }
 
     private static void setUILook() {
@@ -46,11 +68,11 @@ public class Main {
         frame.revalidate();
     }
 
-    private static void homeScreenListeners(JFrame frame, HomeScreen homeScreen) {
+    private static void homeScreenListeners(JFrame frame, HomeScreen homeScreen, Service clientServerService) {
         homeScreen.getEcranAdministrateurButton().addActionListener(e -> {
             AdminHomeScreen adminHomeScreen = null;
             try {
-                adminHomeScreen = new AdminHomeScreen();
+                adminHomeScreen = new AdminHomeScreen(clientServerService);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

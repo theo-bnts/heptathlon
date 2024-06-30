@@ -1,12 +1,8 @@
 package fr.bnts.heptathlon.client_front.screens;
 
-import fr.bnts.heptathlon.main_server.dao.ProductDAO;
-import fr.bnts.heptathlon.main_server.dao.ProductCategoryDAO;
-import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 import fr.bnts.heptathlon.main_server.rmi.Service;
-import fr.bnts.heptathlon.main_server.rmi.ServiceConnector;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -28,22 +24,10 @@ public class AdminProductsTab {
     private JTextField fieldFilterArticles;
     private final List<Product> allProducts;
     private final List<ProductCategory> allCategories;
+    private final Service clientServerService;
 
-    public AdminProductsTab() throws SQLException, NotBoundException, RemoteException {
-        DatabaseConnector clientServerDatabase = new DatabaseConnector(
-                "localhost",
-                3307,
-                "client_server",
-                "client_server",
-                "client_server"
-        );
-
-        ServiceConnector clientServerServiceConnector = new ServiceConnector(
-                1100,
-                "client_server",
-                clientServerDatabase
-        );
-        Service clientServerService = clientServerServiceConnector.connect();
+    public AdminProductsTab(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
+        this.clientServerService = clientServerService;
 
         allCategories = clientServerService.getProductCategories();
         allProducts = clientServerService.getProducts();
@@ -163,22 +147,6 @@ public class AdminProductsTab {
             int newQuantity = (int) spinner.getValue();
             selectedProduct.setQuantity(newQuantity);
 
-            DatabaseConnector clientServerDatabase = new DatabaseConnector(
-                "localhost",
-                3307,
-                "client_server",
-                "client_server",
-                "client_server"
-            );
-
-            ServiceConnector clientServerServiceConnector = new ServiceConnector(
-                1100,
-                "client_server",
-                clientServerDatabase
-            );
-
-            Service clientServerService = clientServerServiceConnector.connect();
-
             clientServerService.updateProduct(selectedProduct);
 
             refreshTree();
@@ -188,25 +156,7 @@ public class AdminProductsTab {
 
     private void refreshTree() throws SQLException, RemoteException, NotBoundException {
         allProducts.clear();
-
-        DatabaseConnector clientServerDatabase = new DatabaseConnector(
-                "localhost",
-                3307,
-                "client_server",
-                "client_server",
-                "client_server"
-        );
-
-        ServiceConnector clientServerServiceConnector = new ServiceConnector(
-                1100,
-                "client_server",
-                clientServerDatabase
-        );
-
-        Service clientServerService = clientServerServiceConnector.connect();
-
         allProducts.addAll(clientServerService.getProducts());
-
         DefaultTreeModel treeModel = createTreeModel(allCategories, allProducts);
         productCategoryList.setModel(treeModel);
     }
