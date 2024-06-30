@@ -30,12 +30,12 @@ public class AdminInvoicesTab {
     public AdminInvoicesTab(Service clientServerService) throws SQLException, RemoteException {
         this.clientServerService = clientServerService;
 
-        invoices = clientServerService.getInvoices();
+        this.invoices = clientServerService.getInvoices();
 
-        DefaultTreeModel treeModel = createTreeModel(invoices);
-        invoicePublishedDateTree.setModel(treeModel);
+        DefaultTreeModel treeModel = createTreeModel(this.invoices);
+        this.invoicePublishedDateTree.setModel(treeModel);
 
-        addEventListeners();
+        this.addEventListeners();
     }
 
     private DefaultTreeModel createTreeModel(List<Invoice> invoices) {
@@ -52,7 +52,7 @@ public class AdminInvoicesTab {
         for (Invoice invoice : invoices) {
             LocalDate date = invoice.getPublishedDate().toLocalDate();
             String year = date.format(yearFormatter);
-            String month = capitalize(date.format(monthFormatter));
+            String month = this.capitalize(date.format(monthFormatter));
             String day = date.format(dayFormatter);
             String time = invoice.getPublishedDate().toLocalTime().format(timeFormatter);
 
@@ -85,7 +85,7 @@ public class AdminInvoicesTab {
     }
 
     private void addEventListeners() {
-        invoicePublishedDateTree.addMouseListener(new MouseAdapter() {
+        this.invoicePublishedDateTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -96,14 +96,15 @@ public class AdminInvoicesTab {
     }
 
     private void handleDoubleClick(MouseEvent e) {
-        TreePath path = invoicePublishedDateTree.getPathForLocation(e.getX(), e.getY());
+        TreePath path =
+                this.invoicePublishedDateTree.getPathForLocation(e.getX(), e.getY());
         if (path != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
             if (node.isLeaf()) {
                 Invoice selectedInvoice = getInvoiceFromNode(node);
                 if (selectedInvoice != null) {
                     try {
-                        openInvoiceFile(selectedInvoice);
+                        this.openInvoiceFile(selectedInvoice);
                     } catch (SQLException | NotBoundException | IOException ex) {
                         ex.printStackTrace();
                     }
@@ -115,14 +116,14 @@ public class AdminInvoicesTab {
     private Invoice getInvoiceFromNode(DefaultMutableTreeNode node) {
         String nodeName = node.getUserObject().toString();
         String productId = nodeName.split("\\(")[0].trim();
-        return invoices.stream()
+        return this.invoices.stream()
                 .filter(product -> product.getId().equals(productId))
                 .findFirst()
                 .orElse(null);
     }
 
     private void openInvoiceFile(Invoice invoice) throws SQLException, IOException, NotBoundException {
-        byte[] invoiceFile = clientServerService.readInvoiceFile(
+        byte[] invoiceFile = this.clientServerService.readInvoiceFile(
                 "client-server",
                 invoice
         );
@@ -136,7 +137,7 @@ public class AdminInvoicesTab {
         }
         else {
             JOptionPane.showMessageDialog(
-                    panel1,
+                    this.panel1,
                     "Desktop n'est pas supporté",
                     "Impossible d'ouvrir le fichier",
                     JOptionPane.ERROR_MESSAGE

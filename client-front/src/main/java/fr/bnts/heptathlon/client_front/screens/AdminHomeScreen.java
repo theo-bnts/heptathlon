@@ -18,7 +18,7 @@ public class AdminHomeScreen {
     public AdminHomeScreen(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
         tabbedPane1.setSelectedIndex(0);
 
-        AdminGrossSalesTab adminGrossSalesTab = new AdminGrossSalesTab();
+        AdminGrossSalesTab adminGrossSalesTab = new AdminGrossSalesTab(clientServerService);
         tabGrossSales.setLayout(new BorderLayout());
         tabGrossSales.add(adminGrossSalesTab.getPanel());
 

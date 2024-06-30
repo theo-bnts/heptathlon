@@ -1,51 +1,115 @@
 package fr.bnts.heptathlon.client_front.screens;
 
+import fr.bnts.heptathlon.main_server.entities.Invoice;
+import fr.bnts.heptathlon.main_server.rmi.Service;
 import org.jdatepicker.JDateComponentFactory;
 import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 public class AdminGrossSalesTab {
-    private JPanel panel1;
-    private JDatePicker datePicker1;
-    private JDatePicker datePicker2;
-    private JButton validateButton;
-    private JLabel resultLabel;
+    private final JPanel panel1;
+    private final JDatePicker datePicker1;
+    private final JDatePicker datePicker2;
+    private final JButton validateButton;
+    private final JLabel resultLabel;
+    private final List<Invoice> invoices;
 
-    public AdminGrossSalesTab() {
+    public AdminGrossSalesTab(Service clientServerService) throws SQLException, RemoteException {
+        this.invoices = clientServerService.getInvoices();
+
         JDateComponentFactory factory = new JDateComponentFactory();
-        datePicker1 = factory.createJDatePicker();
-        datePicker2 = factory.createJDatePicker();
 
-        validateButton = new JButton("Valider");
-        resultLabel = new JLabel("");
+        this.datePicker1 = factory.createJDatePicker();
+        Date aMonthAgo = dateFromAMonthAgo();
+        this.datePicker1.getModel().setDate(
+                aMonthAgo.getYear() + 1900,
+                aMonthAgo.getMonth(),
+                aMonthAgo.getDate()
+        );
 
-        panel1 = new JPanel();
-        panel1.setLayout(new FlowLayout());
-        panel1.add((JComponent) datePicker1);
-        panel1.add((JComponent) datePicker2);
-        panel1.add(validateButton);
-        panel1.add(resultLabel);
+        this.datePicker2 = factory.createJDatePicker();
 
-        validateButton.addActionListener(e -> {
-            Calendar selectedCalendar1 = (Calendar) datePicker1.getModel().getValue();
-            Calendar selectedCalendar2 = (Calendar) datePicker2.getModel().getValue();
+        this.validateButton = new JButton("Valider");
+        this.resultLabel = new JLabel("");
 
-            if (selectedCalendar1 != null && selectedCalendar2 != null) {
-                Date selectedDate1 = selectedCalendar1.getTime();
-                Date selectedDate2 = selectedCalendar2.getTime();
+        this.panel1 = new JPanel();
+        this.panel1.setLayout(new FlowLayout());
+        this.panel1.add((JComponent)this.datePicker1);
+        this.panel1.add((JComponent)this.datePicker2);
+        this.panel1.add(this.validateButton);
+        this.panel1.add(this.resultLabel);
 
-                long diffInMillies = Math.abs(selectedDate2.getTime() - selectedDate1.getTime());
-                long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-                resultLabel.setText("Nombre de jours entre les deux dates : " + diff);
-            } else {
-                resultLabel.setText("Veuillez sélectionner les deux dates.");
-            }
+        this.addEventListeners();
+    }
+
+    private Date dateFromAMonthAgo() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        return calendar.getTime();
+    }
+
+    private void addEventListeners() {
+        this.validateButton.addActionListener(e -> {
+            this.handleValidateButton();
         });
+    }
+
+    private void handleValidateButton() {
+        Calendar selectedCalendar1 =
+                (Calendar)this.datePicker1.getModel().getValue();
+        Calendar selectedCalendar2 =
+                (Calendar)this.datePicker2.getModel().getValue();
+
+        Date selectedDate1 = selectedCalendar1.getTime();
+        Date selectedDate2 = selectedCalendar2.getTime();
+
+        LocalDateTime localDateTime1 = this.convertToLocalDateTime(selectedDate1)
+                        .withHour(0)
+                        .withMinute(0)
+                        .withSecond(0)
+                        .withNano(0);
+        LocalDateTime localDateTime2 = this.convertToLocalDateTime(selectedDate2)
+                        .withHour(23)
+                        .withMinute(59)
+                        .withSecond(59)
+                        .withNano(999999999);
+
+        List<Invoice> filteredInvoices = this.filterInvoicesByDate(localDateTime1, localDateTime2);
+
+        calculateTotalPrice(filteredInvoices);
+    }
+
+    private LocalDateTime convertToLocalDateTime(Date date) {
+        return Instant.ofEpochMilli(date.getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    private List<Invoice> filterInvoicesByDate(LocalDateTime date1,
+                                         LocalDateTime date2) {
+        return this.invoices.stream()
+                .filter(invoice ->
+                        !invoice.getPublishedDate().isBefore(date1) &&
+                                !invoice.getPublishedDate().isAfter(date2))
+                .toList();
+    }
+
+    private void calculateTotalPrice(List<Invoice> invoices) {
+        double totalPrice = invoices.stream()
+                .mapToDouble(Invoice::getPrice)
+                .sum();
+
+        this.resultLabel.setText("Total: " + totalPrice + "€");
     }
 
     public JPanel getPanel() {
