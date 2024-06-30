@@ -19,9 +19,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DataSynchronisation {
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     Service remoteService;
     DatabaseConnector database;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public DataSynchronisation(Service remoteService, DatabaseConnector localDatabaseConnector) {
         this.remoteService = remoteService;
