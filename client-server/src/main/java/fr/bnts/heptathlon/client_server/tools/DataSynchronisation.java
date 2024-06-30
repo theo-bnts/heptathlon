@@ -55,6 +55,10 @@ public class DataSynchronisation {
         long initialDelayPrices = calculateInitialDelay(PRICE_SYNCHRONISATION_TIME);
         long initialDelayInvoices = calculateInitialDelay(INVOICE_SYNCHRONISATION_TIME);
 
+        if (initialDelayPrices < 0) {
+            initialDelayPrices += TimeUnit.DAYS.toMillis(1);
+        }
+
         scheduler.scheduleAtFixedRate(pricesTask, initialDelayPrices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);
         scheduler.scheduleAtFixedRate(invoicesTask, initialDelayInvoices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);
     }
