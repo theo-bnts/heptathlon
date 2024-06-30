@@ -177,9 +177,9 @@ public class StoreHomeScreen {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(new JLabel("Montant total à payer : " + total + "€"));
 
-        JRadioButton cardButton = new JRadioButton("Carte (CARD)");
+        JRadioButton cardButton = new JRadioButton("Carte");
         cardButton.setActionCommand("CARD");
-        JRadioButton chequeButton = new JRadioButton("Chèque (BANK_DRAFT)");
+        JRadioButton chequeButton = new JRadioButton("Chèque ");
         chequeButton.setActionCommand("BANK_DRAFT");
 
         ButtonGroup paymentGroup = new ButtonGroup();
