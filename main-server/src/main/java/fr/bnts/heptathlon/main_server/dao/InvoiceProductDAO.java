@@ -1,6 +1,6 @@
 package fr.bnts.heptathlon.main_server.dao;
 
-import fr.bnts.heptathlon.main_server.database.Database;
+import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class InvoiceProductDAO {
-    public static List<InvoiceProduct> get(Database database,
+    public static List<InvoiceProduct> get(DatabaseConnector database,
                                            String checkoutId) throws SQLException {
         List<InvoiceProduct> products = new ArrayList<>();
         database.prepareQuery("SELECT * FROM INVOICE_PRODUCT WHERE " +
@@ -38,11 +38,11 @@ public abstract class InvoiceProductDAO {
         return products;
     }
 
-    public static List<InvoiceProduct> get(Database database, Invoice invoice) throws SQLException {
+    public static List<InvoiceProduct> get(DatabaseConnector database, Invoice invoice) throws SQLException {
         return get(database, invoice.getId());
     }
 
-    public static void add(Database database, InvoiceProduct invoiceProduct) throws SQLException {
+    public static void add(DatabaseConnector database, InvoiceProduct invoiceProduct) throws SQLException {
         database.prepareQuery("INSERT INTO INVOICE_PRODUCT " +
                         "(ID_INVOICE_PRODUCT, CHECKOUT_ID, PRICE, QUANTITY, ID_PRODUCT) VALUES (?, ?, ?, ?, ?)",
                 preparedStatement -> {

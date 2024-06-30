@@ -4,16 +4,24 @@ import java.io.Serializable;
 import java.sql.*;
 import java.util.function.Consumer;
 
-public class DatabaseImpl implements Database, Serializable {
-    public static final String URL = "jdbc:mysql://localhost:3308/main_server";
-    public static final String USER = "main_server";
-    public static final String PASSWORD = "main_server";
+public class DatabaseConnector implements Serializable {
+    public final String url;
+    public final String user;
+    public final String password;
 
     public Connection connection;
 
+    public DatabaseConnector(String host, int port, String database,
+                             String user,
+                             String password) {
+        this.url = "jdbc:mysql://" + host + ":" + port + "/" + database;
+        this.user = user;
+        this.password = password;
+    }
+
     public void checkConnection() throws SQLException {
         if (connection == null) {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            connection = DriverManager.getConnection(url, user, password);
         }
     }
 

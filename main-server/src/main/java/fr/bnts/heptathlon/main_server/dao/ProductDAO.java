@@ -1,6 +1,6 @@
 package fr.bnts.heptathlon.main_server.dao;
 
-import fr.bnts.heptathlon.main_server.database.Database;
+import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class ProductDAO {
-    public static List<Product> get(Database database) throws SQLException {
+    public static List<Product> get(DatabaseConnector database) throws SQLException {
         List<Product> products = new ArrayList<>();
         database.executeQuery("SELECT * FROM PRODUCT", resultSet -> {
             try {
@@ -34,7 +34,7 @@ public abstract class ProductDAO {
         return products;
     }
 
-    public static Product get(Database database, String productId) throws SQLException {
+    public static Product get(DatabaseConnector database, String productId) throws SQLException {
         AtomicReference<Product> product = new AtomicReference<>();
         database.prepareQuery("SELECT * FROM PRODUCT WHERE ID_PRODUCT = ?",
                 preparedStatement -> {
@@ -60,7 +60,7 @@ public abstract class ProductDAO {
         return product.get();
     }
 
-    public static List<Product> get(Database database, ProductCategory category) throws SQLException {
+    public static List<Product> get(DatabaseConnector database, ProductCategory category) throws SQLException {
         List<Product> products = new ArrayList<>();
         System.out.println(category);
         database.prepareQuery("SELECT * FROM PRODUCT WHERE " +
@@ -84,7 +84,7 @@ public abstract class ProductDAO {
         return products;
     }
 
-    public static void update(Database database, Product product) throws SQLException {
+    public static void update(DatabaseConnector database, Product product) throws SQLException {
         database.prepareQuery("UPDATE PRODUCT SET NAME = ?, PRICE = ?, QUANTITY = ?, ID_PRODUCT_CATEGORY = ? WHERE ID_PRODUCT = ?",
                 preparedStatement -> {
                     try {
@@ -102,7 +102,7 @@ public abstract class ProductDAO {
                 });
     }
 
-    public static void add(Database database, Product product) throws SQLException {
+    public static void add(DatabaseConnector database, Product product) throws SQLException {
         database.prepareQuery("INSERT INTO PRODUCT (ID_PRODUCT, NAME, PRICE, QUANTITY, ID_PRODUCT_CATEGORY) VALUES (?, ?, ?, ?, ?)",
                 preparedStatement -> {
                     try {

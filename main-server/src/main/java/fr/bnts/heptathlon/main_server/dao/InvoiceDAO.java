@@ -1,6 +1,6 @@
 package fr.bnts.heptathlon.main_server.dao;
 
-import fr.bnts.heptathlon.main_server.database.Database;
+import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 
 import java.sql.ResultSet;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class InvoiceDAO {
-    public static List<Invoice> get(Database database) throws SQLException {
+    public static List<Invoice> get(DatabaseConnector database) throws SQLException {
         List<Invoice> invoices = new ArrayList<>();
         database.executeQuery("SELECT * FROM INVOICE", resultSet -> {
             try {
@@ -31,7 +31,7 @@ public abstract class InvoiceDAO {
         return invoices;
     }
 
-    public static Invoice get(Database database, String id) throws SQLException {
+    public static Invoice get(DatabaseConnector database, String id) throws SQLException {
         AtomicReference<Invoice> invoice = new AtomicReference<>();
         database.prepareQuery("SELECT * FROM INVOICE WHERE ID_INVOICE = ?",
                 preparedStatement -> {
@@ -54,7 +54,7 @@ public abstract class InvoiceDAO {
         return invoice.get();
     }
 
-    public static void add(Database database, Invoice invoice) throws SQLException {
+    public static void add(DatabaseConnector database, Invoice invoice) throws SQLException {
         database.prepareQuery("INSERT INTO INVOICE (ID_INVOICE, " +
                         "PUBLISHED_DATE, PRICE, PAYMENT_METHOD) VALUES (?, ?, ?, ?)",
                 preparedStatement -> {

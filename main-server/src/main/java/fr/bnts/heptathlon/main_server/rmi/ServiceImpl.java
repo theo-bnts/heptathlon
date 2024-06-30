@@ -1,7 +1,7 @@
 package fr.bnts.heptathlon.main_server.rmi;
 
 import fr.bnts.heptathlon.main_server.dao.*;
-import fr.bnts.heptathlon.main_server.database.Database;
+import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
@@ -14,78 +14,81 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ServiceImpl extends UnicastRemoteObject implements Service {
-    public ServiceImpl() throws RemoteException {
+    DatabaseConnector databaseConnector;
+
+    public ServiceImpl(DatabaseConnector database) throws RemoteException {
         super();
+        this.databaseConnector = database;
     }
 
     @Override
-    public ProductCategory getProductCategory(Database database, int id) throws RemoteException, SQLException {
-        return ProductCategoryDAO.get(database, id);
+    public ProductCategory getProductCategory(int id) throws RemoteException, SQLException {
+        return ProductCategoryDAO.get(databaseConnector, id);
     }
 
     @Override
-    public List<ProductCategory> getProductCategories(Database database) throws RemoteException, SQLException {
-        return ProductCategoryDAO.get(database);
+    public List<ProductCategory> getProductCategories() throws RemoteException, SQLException {
+        return ProductCategoryDAO.get(databaseConnector);
     }
 
     @Override
-    public void addProductCategory(Database database, ProductCategory productCategory) throws RemoteException, SQLException {
-        ProductCategoryDAO.add(database, productCategory);
+    public void addProductCategory(ProductCategory productCategory) throws RemoteException, SQLException {
+        ProductCategoryDAO.add(databaseConnector, productCategory);
     }
 
     @Override
-    public Product getProduct(Database database, String id) throws RemoteException, SQLException {
-        return ProductDAO.get(database, id);
+    public Product getProduct(String id) throws RemoteException, SQLException {
+        return ProductDAO.get(databaseConnector, id);
     }
 
     @Override
-    public List<Product> getProducts(Database database) throws RemoteException, SQLException {
-        return ProductDAO.get(database);
+    public List<Product> getProducts() throws RemoteException, SQLException {
+        return ProductDAO.get(databaseConnector);
     }
 
     @Override
-    public List<Product> getProducts(Database database, ProductCategory category) throws RemoteException, SQLException {
-        return ProductDAO.get(database, category);
+    public List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException {
+        return ProductDAO.get(databaseConnector, category);
     }
 
     @Override
-    public void updateProduct(Database database, Product product) throws RemoteException, SQLException {
-        ProductDAO.update(database, product);
+    public void updateProduct(Product product) throws RemoteException, SQLException {
+        ProductDAO.update(databaseConnector, product);
     }
 
     @Override
-    public void addProduct(Database database, Product product) throws RemoteException, SQLException {
-        ProductDAO.add(database, product);
+    public void addProduct(Product product) throws RemoteException, SQLException {
+        ProductDAO.add(databaseConnector, product);
     }
 
     @Override
-    public List<InvoiceProduct> getInvoiceProducts(Database database, String checkoutId) throws RemoteException, SQLException {
-        return InvoiceProductDAO.get(database, checkoutId);
+    public List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException {
+        return InvoiceProductDAO.get(databaseConnector, checkoutId);
     }
 
     @Override
-    public List<InvoiceProduct> getInvoiceProducts(Database database, Invoice invoice) throws RemoteException, SQLException {
-        return InvoiceProductDAO.get(database, invoice);
+    public List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException, SQLException {
+        return InvoiceProductDAO.get(databaseConnector, invoice);
     }
 
     @Override
-    public void addInvoiceProduct(Database database, InvoiceProduct invoiceProduct) throws RemoteException, SQLException {
-        InvoiceProductDAO.add(database, invoiceProduct);
+    public void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException {
+        InvoiceProductDAO.add(databaseConnector, invoiceProduct);
     }
 
     @Override
-    public Invoice getInvoice(Database database, String id) throws RemoteException, SQLException {
-        return InvoiceDAO.get(database, id);
+    public Invoice getInvoice(String id) throws RemoteException, SQLException {
+        return InvoiceDAO.get(databaseConnector, id);
     }
 
     @Override
-    public List<Invoice> getInvoices(Database database) throws RemoteException, SQLException {
-        return InvoiceDAO.get(database);
+    public List<Invoice> getInvoices() throws RemoteException, SQLException {
+        return InvoiceDAO.get(databaseConnector);
     }
 
     @Override
-    public void addInvoice(Database database, Invoice invoice) throws RemoteException, SQLException {
-        InvoiceDAO.add(database, invoice);
+    public void addInvoice(Invoice invoice) throws RemoteException, SQLException {
+        InvoiceDAO.add(databaseConnector, invoice);
     }
 
     @Override

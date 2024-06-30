@@ -1,6 +1,6 @@
 package fr.bnts.heptathlon.main_server.rmi;
 
-import fr.bnts.heptathlon.main_server.database.Database;
+import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
@@ -13,34 +13,34 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface Service extends Remote {
-    ProductCategory getProductCategory(Database database, int id) throws RemoteException, SQLException;
+    ProductCategory getProductCategory(int id) throws RemoteException, SQLException;
 
-    List<ProductCategory> getProductCategories(Database database) throws RemoteException, SQLException;
+    List<ProductCategory> getProductCategories() throws RemoteException, SQLException;
 
-    void addProductCategory(Database database, ProductCategory productCategory) throws RemoteException, SQLException;
+    void addProductCategory(ProductCategory productCategory) throws RemoteException, SQLException;
 
-    Product getProduct(Database database, String id) throws RemoteException, SQLException;
+    Product getProduct(String id) throws RemoteException, SQLException;
 
-    List<Product> getProducts(Database database) throws RemoteException, SQLException;
+    List<Product> getProducts() throws RemoteException, SQLException;
 
-    List<Product> getProducts(Database database, ProductCategory category) throws RemoteException, SQLException;
+    List<Product> getProducts(ProductCategory category) throws RemoteException, SQLException;
 
-    void updateProduct(Database database, Product product) throws RemoteException, SQLException;
+    void updateProduct(Product product) throws RemoteException, SQLException;
 
-    void addProduct(Database database, Product product) throws RemoteException, SQLException;
+    void addProduct(Product product) throws RemoteException, SQLException;
 
-    List<InvoiceProduct> getInvoiceProducts(Database database, String checkoutId) throws RemoteException, SQLException;
+    List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException;
 
-    List<InvoiceProduct> getInvoiceProducts(Database database, Invoice invoice) throws RemoteException,
+    List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException,
             SQLException;
 
-    void addInvoiceProduct(Database database, InvoiceProduct invoiceProduct) throws RemoteException, SQLException;
+    void addInvoiceProduct(InvoiceProduct invoiceProduct) throws RemoteException, SQLException;
 
-    Invoice getInvoice(Database database, String id) throws RemoteException, SQLException;
+    Invoice getInvoice(String id) throws RemoteException, SQLException;
 
-    List<Invoice> getInvoices(Database database) throws RemoteException, SQLException;
+    List<Invoice> getInvoices() throws RemoteException, SQLException;
 
-    void addInvoice(Database database, Invoice invoice) throws RemoteException, SQLException;
+    void addInvoice(Invoice invoice) throws RemoteException, SQLException;
 
     String getInvoiceFileFullPath(String packageName, Invoice invoice) throws RemoteException;
 
