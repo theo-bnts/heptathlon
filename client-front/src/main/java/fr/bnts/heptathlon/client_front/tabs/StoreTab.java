@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -167,7 +169,7 @@ public class StoreTab {
             }
             updateCartList();
             updateTotalCartLabel();
-            updateValidCartButton(); // Mise à jour de l'état du bouton
+            updateValidCartButton();
         }
     }
 
@@ -217,6 +219,23 @@ public class StoreTab {
         panel.add(cardButton);
         panel.add(chequeButton);
 
+        JPanel buttonPanel = new JPanel();
+        JButton payButton = new JButton("Payer");
+        payButton.setEnabled(false);
+        buttonPanel.add(payButton);
+
+        panel.add(buttonPanel);
+
+        ActionListener enablePayButtonListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                payButton.setEnabled(true);
+            }
+        };
+
+        cardButton.addActionListener(enablePayButtonListener);
+        chequeButton.addActionListener(enablePayButtonListener);
+
         int result = JOptionPane.showOptionDialog(
                 null,
                 panel,
@@ -224,7 +243,7 @@ public class StoreTab {
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 null,
-                new String[]{"Payer", "Annuler"},
+                new Object[]{payButton, "Annuler"},
                 null
         );
 
