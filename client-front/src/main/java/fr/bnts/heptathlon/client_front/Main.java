@@ -31,7 +31,6 @@ public class Main {
 
         Service clientServerService = clientServerServiceConnector.connect();
 
-        // Create and show the main frame
         JFrame frame = new JFrame("Heptathlon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
