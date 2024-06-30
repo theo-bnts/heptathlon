@@ -53,9 +53,12 @@ public class StoreTab {
 
         loadProducts();
         updateTotalCartLabel();
+        updateValidCartButton();
     }
 
-
+    private void updateValidCartButton() {
+        validCartButton.setEnabled(!cart.isEmpty());
+    }
 
     private void loadProducts() throws RemoteException, SQLException {
         List<Product> products = this.clientServerService.getProducts();
@@ -90,7 +93,6 @@ public class StoreTab {
         }
         return new DefaultTreeModel(root);
     }
-
 
     private void addEventListeners() {
         this.productCategoryTree.addMouseListener(new MouseAdapter() {
@@ -138,7 +140,6 @@ public class StoreTab {
         }
     }
 
-
     private Product getProductFromNode(DefaultMutableTreeNode node) {
         String nodeName = node.getUserObject().toString();
         String productName = nodeName.split(" \\(Quantité: ")[0].trim();
@@ -151,6 +152,7 @@ public class StoreTab {
             cart.put(productName, cart.getOrDefault(productName, 0) + 1);
             updateCartList();
             updateTotalCartLabel();
+            updateValidCartButton(); // Mise à jour de l'état du bouton
         }
     }
 
@@ -165,6 +167,7 @@ public class StoreTab {
             }
             updateCartList();
             updateTotalCartLabel();
+            updateValidCartButton(); // Mise à jour de l'état du bouton
         }
     }
 
