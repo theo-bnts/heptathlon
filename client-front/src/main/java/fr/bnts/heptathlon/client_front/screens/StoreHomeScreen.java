@@ -29,10 +29,10 @@ public class StoreHomeScreen {
     private JButton validCartButton;
     private JList<String> productsAddedToCartList;
     private JTree productCategoryTree;
-    private Service clientServerService;
-    private DefaultListModel<String> cartListModel;
-    private Map<String, Integer> cart;
-    private Map<String, Product> productMap;
+    private final Service clientServerService;
+    private final DefaultListModel<String> cartListModel;
+    private final Map<String, Integer> cart;
+    private final Map<String, Product> productMap;
 
     public StoreHomeScreen(Service clientServerService) throws RemoteException, SQLException {
         this.clientServerService = clientServerService;
