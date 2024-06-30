@@ -20,24 +20,44 @@ public class TabContainer {
     private JPanel tabInvoices;
     private JPanel tabStore;
 
+    private final StoreTab storeTab;
+    private final ProductsTab productsTab;
+    private final InvoicesTab invoicesTab;
+    private final GrossSalesTab grossSalesTab;
+
     public TabContainer(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
         tabbedPane1.setSelectedIndex(0);
 
-        StoreTab storeTab = new StoreTab(clientServerService);
+        storeTab = new StoreTab(clientServerService);
         tabStore.setLayout(new BorderLayout());
         tabStore.add(storeTab.getPanel());
 
-        ProductsTab productsTab = new ProductsTab(clientServerService);
+        productsTab = new ProductsTab(clientServerService);
         tabProduct.setLayout(new BorderLayout());
         tabProduct.add(productsTab.getPanel());
 
-        GrossSalesTab grossSalesTab = new GrossSalesTab(clientServerService);
+        invoicesTab = new InvoicesTab(clientServerService);
+        tabInvoices.setLayout(new BorderLayout());
+        tabInvoices.add(invoicesTab.getPanel());
+
+        grossSalesTab = new GrossSalesTab(clientServerService);
         tabGrossSales.setLayout(new BorderLayout());
         tabGrossSales.add(grossSalesTab.getPanel());
 
-        InvoicesTab invoicesTab = new InvoicesTab(clientServerService);
-        tabInvoices.setLayout(new BorderLayout());
-        tabInvoices.add(invoicesTab.getPanel());
+        tabbedPane1.addChangeListener(e -> onTabChanged());
+    }
+
+    private void onTabChanged() {
+        int selectedIndex = tabbedPane1.getSelectedIndex();
+        try {
+            switch (selectedIndex) {
+                case 0 -> storeTab.refreshData();
+                case 1 -> productsTab.refreshData();
+                case 2 -> invoicesTab.refreshData();
+            }
+        } catch (RemoteException | SQLException | NotBoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public JPanel getPanel() {

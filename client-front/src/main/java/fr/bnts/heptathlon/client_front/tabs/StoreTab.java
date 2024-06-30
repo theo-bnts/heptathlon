@@ -25,11 +25,11 @@ import java.util.UUID;
 
 public class StoreTab {
     private final Service clientServerService;
-    private final DefaultListModel<String> cartListModel;
-    private final Map<String, Integer> cart;
-    private final Map<String, Product> productMap;
+    private DefaultListModel<String> cartListModel;
+    private Map<String, Integer> cart;
+    private Map<String, Product> productMap;
     private JPanel panel;
-    private JScrollPane availibleProductListPane;
+    private JScrollPane availableProductListPane;
     private JScrollPane addedToCartListPane;
     private JPanel bottomPane;
     private JLabel totalCartLabel;
@@ -39,15 +39,23 @@ public class StoreTab {
 
     public StoreTab(Service clientServerService) throws RemoteException, SQLException {
         this.clientServerService = clientServerService;
+
+        this.refreshData();
+
+        addEventListeners();
+    }
+
+    public void refreshData() throws RemoteException, SQLException {
         this.cart = new HashMap<>();
         this.productMap = new HashMap<>();
         this.cartListModel = new DefaultListModel<>();
         this.productsAddedToCartList.setModel(cartListModel);
 
         loadProducts();
-        addEventListeners();
         updateTotalCartLabel();
     }
+
+
 
     private void loadProducts() throws RemoteException, SQLException {
         List<Product> products = this.clientServerService.getProducts();

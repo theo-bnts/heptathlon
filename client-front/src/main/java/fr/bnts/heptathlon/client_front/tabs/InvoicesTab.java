@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class InvoicesTab {
-    private final List<Invoice> invoices;
+    private List<Invoice> invoices;
     private final Service clientServerService;
     private JPanel panel1;
     private JTree invoicePublishedDateTree;
@@ -30,16 +30,21 @@ public class InvoicesTab {
     public InvoicesTab(Service clientServerService) throws SQLException, RemoteException {
         this.clientServerService = clientServerService;
 
-        this.invoices = clientServerService.getInvoices()
+        this.refreshData();
+
+        this.addEventListeners();
+    }
+
+    public void refreshData() throws SQLException, RemoteException {
+        this.invoices = this.clientServerService.getInvoices()
                 .stream()
                 .sorted((invoice1, invoice2) -> invoice2.getPublishedDate().compareTo(invoice1.getPublishedDate()))
                 .toList();
 
         DefaultTreeModel treeModel = createTreeModel(this.invoices);
         this.invoicePublishedDateTree.setModel(treeModel);
-
-        this.addEventListeners();
     }
+
 
     private DefaultTreeModel createTreeModel(List<Invoice> invoices) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Factures");

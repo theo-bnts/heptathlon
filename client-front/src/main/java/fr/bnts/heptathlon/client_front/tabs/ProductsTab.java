@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductsTab {
-    private final List<Product> products;
-    private final List<ProductCategory> categories;
+    private List<Product> products;
+    private List<ProductCategory> categories;
     private final Service clientServerService;
     private JPanel panel1;
     private JTree productCategoryTree;
@@ -29,14 +29,19 @@ public class ProductsTab {
     public ProductsTab(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
         this.clientServerService = clientServerService;
 
-        categories = clientServerService.getProductCategories();
-        products = clientServerService.getProducts();
+        this.refreshData();
+
+        filterItems();
+
+        addEventListeners();
+    }
+
+    public void refreshData() throws SQLException, RemoteException, NotBoundException {
+        this.categories = this.clientServerService.getProductCategories();
+        this.products = this.clientServerService.getProducts();
 
         DefaultTreeModel treeModel = createTreeModel(categories, products);
         productCategoryTree.setModel(treeModel);
-
-        filterItems();
-        addEventListeners();
     }
 
     private DefaultTreeModel createTreeModel(List<ProductCategory> categories, List<Product> products) {
@@ -61,9 +66,9 @@ public class ProductsTab {
     }
 
     private void filterTree() {
-        String filter = fieldFilterArticles.getText().toLowerCase();
+        String filter = fieldFilterArticles.getText();
         List<Product> filteredProducts = products.stream()
-                .filter(product -> product.getName().toLowerCase().contains(filter))
+                .filter(product -> product.getName().contains(filter))
                 .collect(Collectors.toList());
         DefaultTreeModel filteredTreeModel = createTreeModel(categories, filteredProducts);
         productCategoryTree.setModel(filteredTreeModel);
@@ -128,9 +133,9 @@ public class ProductsTab {
 
     private void popupItemQuantity(Product selectedProduct) throws SQLException, NotBoundException, RemoteException {
         JSpinner spinner =
-                new JSpinner(new SpinnerNumberModel(selectedProduct.getQuantity(), -1, 32767, 1));
+                new JSpinner(new SpinnerNumberModel(selectedProduct.getQuantity(), 0, 32767, 1));
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Article sélectionné : " + selectedProduct.getName()));
+        panel.add(new JLabel("Article sélectionné: " + selectedProduct.getName()));
         panel.add(spinner);
 
         int result = JOptionPane.showOptionDialog(
@@ -151,7 +156,7 @@ public class ProductsTab {
             clientServerService.updateProduct(selectedProduct);
 
             refreshTree();
-            System.out.println("Article : " + selectedProduct.getName() + ", Nouvelle quantité : " + newQuantity);
+            System.out.println("Article : " + selectedProduct.getName() + ", Nouvelle quantité: " + newQuantity);
         }
     }
 

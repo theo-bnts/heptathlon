@@ -22,7 +22,7 @@ public class GrossSalesTab {
     private final JDatePicker datePicker2;
     private final JButton validateButton;
     private final JLabel resultLabel;
-    private final List<Invoice> invoices;
+    private List<Invoice> invoices;
 
     public GrossSalesTab(Service clientServerService) throws SQLException, RemoteException {
         this.invoices = clientServerService.getInvoices();
