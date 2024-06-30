@@ -1,5 +1,7 @@
 package fr.bnts.heptathlon.client_front.screens;
 
+import fr.bnts.heptathlon.main_server.entities.Invoice;
+import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 import fr.bnts.heptathlon.main_server.rmi.Service;
@@ -12,24 +14,22 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class StoreHomeScreen {
     private JPanel panel;
     private JScrollPane availibleProductListPane;
     private JScrollPane addedToCartListPane;
     private JPanel bottomPane;
-
-    private JList<String> productsAddedToCartList;
-    private JTree productCategoryTree;
-
     private JLabel totalCartLabel;
     private JButton validCartButton;
-
+    private JList<String> productsAddedToCartList;
+    private JTree productCategoryTree;
     private final Service clientServerService;
-
     private final DefaultListModel<String> cartListModel;
     private final Map<String, Integer> cart;
     private final Map<String, Product> productMap;
@@ -39,7 +39,7 @@ public class StoreHomeScreen {
         this.cart = new HashMap<>();
         this.productMap = new HashMap<>();
         this.cartListModel = new DefaultListModel<>();
-        productsAddedToCartList.setModel(cartListModel);
+        this.productsAddedToCartList.setModel(cartListModel);
 
         loadProducts();
         addEventListeners();
@@ -47,10 +47,10 @@ public class StoreHomeScreen {
     }
 
     private void loadProducts() throws RemoteException, SQLException {
-        List<Product> products = clientServerService.getProducts();
-        List<ProductCategory> categories = clientServerService.getProductCategories();
+        List<Product> products = this.clientServerService.getProducts();
+        List<ProductCategory> categories = this.clientServerService.getProductCategories();
         DefaultTreeModel treeModel = createTreeModel(categories, products);
-        productCategoryTree.setModel(treeModel);
+        this.productCategoryTree.setModel(treeModel);
     }
 
     private DefaultTreeModel createTreeModel(List<ProductCategory> categories, List<Product> products) {
@@ -67,7 +67,7 @@ public class StoreHomeScreen {
                             product.getName() + " (Quantité: " + product.getQuantity() + ", Prix: " + product.getPrice() + "€)"
                     );
                     categoryNode.add(productNode);
-                    productMap.put(product.getName(), product);
+                    this.productMap.put(product.getName(), product);
                 }
                 root.add(categoryNode);
             }
@@ -76,7 +76,7 @@ public class StoreHomeScreen {
     }
 
     private void addEventListeners() {
-        productCategoryTree.addMouseListener(new MouseAdapter() {
+        this.productCategoryTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
@@ -110,6 +110,8 @@ public class StoreHomeScreen {
                 }
             }
         });
+
+        validCartButton.addActionListener(e -> doCheckout());
     }
 
     private Product getProductFromNode(DefaultMutableTreeNode node) {
@@ -142,12 +144,12 @@ public class StoreHomeScreen {
     }
 
     private void updateCartList() {
-        cartListModel.clear();
+        this.cartListModel.clear();
         for (Map.Entry<String, Integer> entry : cart.entrySet()) {
             String productName = entry.getKey();
             int count = entry.getValue();
             Product product = productMap.get(productName);
-            cartListModel.addElement("x" + count + " - " + productName + " - " + (count * product.getPrice()) + "€");
+            this.cartListModel.addElement("x" + count + " - " + productName + " - " + (count * product.getPrice()) + "€");
         }
     }
 
@@ -159,8 +161,78 @@ public class StoreHomeScreen {
             Product product = productMap.get(productName);
             total += count * product.getPrice();
         }
-        totalCartLabel.setText("Total: " + total + "€");
+        this.totalCartLabel.setText("Total: " + total + "€");
     }
+
+    private void doCheckout() {
+        double total = 0;
+        for (Map.Entry<String, Integer> entry : cart.entrySet()) {
+            String productName = entry.getKey();
+            int count = entry.getValue();
+            Product product = this.productMap.get(productName);
+            total += count * product.getPrice();
+        }
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("Montant total à payer : " + total + "€"));
+
+        JRadioButton cardButton = new JRadioButton("Carte");
+        cardButton.setActionCommand("CARD");
+        JRadioButton chequeButton = new JRadioButton("Chèque ");
+        chequeButton.setActionCommand("BANK_DRAFT");
+
+        ButtonGroup paymentGroup = new ButtonGroup();
+        paymentGroup.add(cardButton);
+        paymentGroup.add(chequeButton);
+
+        panel.add(cardButton);
+        panel.add(chequeButton);
+
+        int result = JOptionPane.showOptionDialog(
+                null,
+                panel,
+                "Paiement",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                new String[]{"Payer", "Annuler"},
+                null
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            String selectedPaymentMethod = paymentGroup.getSelection().getActionCommand();
+            try {
+                createInvoice(total, selectedPaymentMethod);
+                JOptionPane.showMessageDialog(null, "Paiement réussi !");
+                this.cart.clear();
+                this.updateCartList();
+                this.loadProducts();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void createInvoice(double total, String paymentMethod) throws RemoteException, SQLException {
+        String invoiceId = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+        Invoice invoice = new Invoice(invoiceId, now, (float) total, paymentMethod);
+
+        for (Map.Entry<String, Integer> entry : cart.entrySet()) {
+            String productName = entry.getKey();
+            int quantity = entry.getValue();
+            Product product = productMap.get(productName);
+            String invoiceProductId = UUID.randomUUID().toString();
+            InvoiceProduct invoiceProduct = new InvoiceProduct(invoiceProductId, invoiceId, product.getPrice(), quantity, product);
+            this.clientServerService.addInvoiceProduct(invoiceProduct);
+
+            int newQuantity = product.getQuantity() - quantity;
+            product.setQuantity(newQuantity);
+            this.clientServerService.updateProduct(product);
+        }
+
+        this.clientServerService.addInvoice(invoice);}
 
     public JPanel getPanel() {
         return panel;
