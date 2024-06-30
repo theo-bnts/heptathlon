@@ -19,6 +19,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DataSynchronisation {
+    private final LocalTime PRICE_SYNCHRONISATION_TIME = LocalTime.of(6, 0);
+    private final LocalTime INVOICE_SYNCHRONISATION_TIME = LocalTime.of(22, 0);
+
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     Service remoteService;
     DatabaseConnector database;
@@ -49,8 +52,8 @@ public class DataSynchronisation {
             }
         };
 
-        long initialDelayPrices = calculateInitialDelay(LocalTime.of(18, 2));
-        long initialDelayInvoices = calculateInitialDelay(LocalTime.of(22, 0));
+        long initialDelayPrices = calculateInitialDelay(PRICE_SYNCHRONISATION_TIME);
+        long initialDelayInvoices = calculateInitialDelay(INVOICE_SYNCHRONISATION_TIME);
 
         scheduler.scheduleAtFixedRate(pricesTask, initialDelayPrices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);
         scheduler.scheduleAtFixedRate(invoicesTask, initialDelayInvoices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);

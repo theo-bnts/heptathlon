@@ -3,11 +3,11 @@ package fr.bnts.heptathlon.main_server.entities;
 import java.io.Serializable;
 
 public class Product implements Serializable {
-    private String id;
-    private String name;
+    private final String id;
+    private final String name;
+    private final ProductCategory category;
     private float price;
     private int quantity;
-    private ProductCategory category;
 
     public Product(String id, String name, float price, int quantity,
                    ProductCategory category) {

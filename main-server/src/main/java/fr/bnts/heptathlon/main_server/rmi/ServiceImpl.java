@@ -62,11 +62,6 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
-    public List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException {
-        return InvoiceProductDAO.get(databaseConnector, checkoutId);
-    }
-
-    @Override
     public List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException, SQLException {
         return InvoiceProductDAO.get(databaseConnector, invoice);
     }

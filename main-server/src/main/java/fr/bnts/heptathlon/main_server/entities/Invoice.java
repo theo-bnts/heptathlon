@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Invoice implements Serializable {
-    private String id;
-    private LocalDateTime publishedDate;
-    private float price;
-    private String paymentMethod;
+    private final String id;
+    private final LocalDateTime publishedDate;
+    private final float price;
+    private final String paymentMethod;
 
     public Invoice(String id, LocalDateTime publishedDate, float price,
                    String paymentMethod) {

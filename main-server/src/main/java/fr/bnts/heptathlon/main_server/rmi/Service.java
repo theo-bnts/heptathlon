@@ -28,8 +28,6 @@ public interface Service extends Remote {
 
     void addProduct(Product product) throws RemoteException, SQLException;
 
-    List<InvoiceProduct> getInvoiceProducts(String checkoutId) throws RemoteException, SQLException;
-
     List<InvoiceProduct> getInvoiceProducts(Invoice invoice) throws RemoteException,
             SQLException;
 
