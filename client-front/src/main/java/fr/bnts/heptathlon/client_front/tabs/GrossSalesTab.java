@@ -1,4 +1,4 @@
-package fr.bnts.heptathlon.client_front.screens;
+package fr.bnts.heptathlon.client_front.tabs;
 
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.rmi.Service;
@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class AdminGrossSalesTab {
+public class GrossSalesTab {
     private final JPanel panel1;
     private final JDatePicker datePicker1;
     private final JDatePicker datePicker2;
@@ -24,7 +24,7 @@ public class AdminGrossSalesTab {
     private final JLabel resultLabel;
     private final List<Invoice> invoices;
 
-    public AdminGrossSalesTab(Service clientServerService) throws SQLException, RemoteException {
+    public GrossSalesTab(Service clientServerService) throws SQLException, RemoteException {
         this.invoices = clientServerService.getInvoices();
 
         JDateComponentFactory factory = new JDateComponentFactory();

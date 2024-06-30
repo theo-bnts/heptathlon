@@ -1,4 +1,4 @@
-package fr.bnts.heptathlon.client_front.screens;
+package fr.bnts.heptathlon.client_front.tabs;
 
 import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
@@ -21,13 +21,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-public class AdminInvoicesTab {
+public class InvoicesTab {
     private final List<Invoice> invoices;
     private final Service clientServerService;
     private JPanel panel1;
     private JTree invoicePublishedDateTree;
 
-    public AdminInvoicesTab(Service clientServerService) throws SQLException, RemoteException {
+    public InvoicesTab(Service clientServerService) throws SQLException, RemoteException {
         this.clientServerService = clientServerService;
 
         this.invoices = clientServerService.getInvoices();

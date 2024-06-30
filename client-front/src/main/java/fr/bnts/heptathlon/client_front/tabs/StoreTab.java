@@ -1,4 +1,4 @@
-package fr.bnts.heptathlon.client_front.screens;
+package fr.bnts.heptathlon.client_front.tabs;
 
 import fr.bnts.heptathlon.client_front.tools.InvoiceFileWriter;
 import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class StoreHomeScreen {
+public class StoreTab {
     private final Service clientServerService;
     private final DefaultListModel<String> cartListModel;
     private final Map<String, Integer> cart;
@@ -37,7 +37,7 @@ public class StoreHomeScreen {
     private JList<String> productsAddedToCartList;
     private JTree productCategoryTree;
 
-    public StoreHomeScreen(Service clientServerService) throws RemoteException, SQLException {
+    public StoreTab(Service clientServerService) throws RemoteException, SQLException {
         this.clientServerService = clientServerService;
         this.cart = new HashMap<>();
         this.productMap = new HashMap<>();
@@ -156,7 +156,7 @@ public class StoreHomeScreen {
             String productName = entry.getKey();
             int count = entry.getValue();
             Product product = productMap.get(productName);
-            this.cartListModel.addElement("x" + count + " - " + productName + " - " + (count * product.getPrice()) + "€");
+            this.cartListModel.addElement(count + " x " + productName + " = " + (count * product.getPrice()) + "€");
         }
     }
 
@@ -182,7 +182,7 @@ public class StoreHomeScreen {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel("Montant total à payer : " + total + "€"));
+        panel.add(new JLabel("Montant total à payer: " + total + "€"));
 
         JRadioButton cardButton = new JRadioButton("Carte");
         cardButton.setActionCommand("CARD");
@@ -216,7 +216,7 @@ public class StoreHomeScreen {
                 this.updateCartList();
                 this.loadProducts();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

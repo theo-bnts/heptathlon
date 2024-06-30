@@ -1,4 +1,4 @@
-package fr.bnts.heptathlon.client_front.screens;
+package fr.bnts.heptathlon.client_front.tabs;
 
 import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AdminProductsTab {
+public class ProductsTab {
     private final List<Product> products;
     private final List<ProductCategory> categories;
     private final Service clientServerService;
@@ -26,7 +26,7 @@ public class AdminProductsTab {
     private JTree productCategoryTree;
     private JTextField fieldFilterArticles;
 
-    public AdminProductsTab(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
+    public ProductsTab(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
         this.clientServerService = clientServerService;
 
         categories = clientServerService.getProductCategories();
