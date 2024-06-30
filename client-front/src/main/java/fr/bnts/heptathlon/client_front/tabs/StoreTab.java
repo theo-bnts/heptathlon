@@ -235,6 +235,7 @@ public class StoreTab {
                 JOptionPane.showMessageDialog(null, "Paiement réussi !");
                 this.cart.clear();
                 this.updateCartList();
+                this.updateTotalCartLabel();
                 this.loadProducts();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
