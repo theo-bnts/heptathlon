@@ -1,8 +1,6 @@
 package fr.bnts.heptathlon.client_front.tools;
 
 import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
-import fr.bnts.heptathlon.main_server.dao.InvoiceProductDAO;
-import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.entities.Invoice;
 import fr.bnts.heptathlon.main_server.entities.InvoiceProduct;
 import fr.bnts.heptathlon.main_server.rmi.Service;

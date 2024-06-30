@@ -44,8 +44,8 @@ public class AdminGrossSalesTab {
 
         this.panel1 = new JPanel();
         this.panel1.setLayout(new FlowLayout());
-        this.panel1.add((JComponent)this.datePicker1);
-        this.panel1.add((JComponent)this.datePicker2);
+        this.panel1.add((JComponent) this.datePicker1);
+        this.panel1.add((JComponent) this.datePicker2);
         this.panel1.add(this.validateButton);
         this.panel1.add(this.resultLabel);
 
@@ -66,23 +66,23 @@ public class AdminGrossSalesTab {
 
     private void handleValidateButton() {
         Calendar selectedCalendar1 =
-                (Calendar)this.datePicker1.getModel().getValue();
+                (Calendar) this.datePicker1.getModel().getValue();
         Calendar selectedCalendar2 =
-                (Calendar)this.datePicker2.getModel().getValue();
+                (Calendar) this.datePicker2.getModel().getValue();
 
         Date selectedDate1 = selectedCalendar1.getTime();
         Date selectedDate2 = selectedCalendar2.getTime();
 
         LocalDateTime localDateTime1 = this.convertToLocalDateTime(selectedDate1)
-                        .withHour(0)
-                        .withMinute(0)
-                        .withSecond(0)
-                        .withNano(0);
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
         LocalDateTime localDateTime2 = this.convertToLocalDateTime(selectedDate2)
-                        .withHour(23)
-                        .withMinute(59)
-                        .withSecond(59)
-                        .withNano(999999999);
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(59)
+                .withNano(999999999);
 
         List<Invoice> filteredInvoices = this.filterInvoicesByDate(localDateTime1, localDateTime2);
 
@@ -96,7 +96,7 @@ public class AdminGrossSalesTab {
     }
 
     private List<Invoice> filterInvoicesByDate(LocalDateTime date1,
-                                         LocalDateTime date2) {
+                                               LocalDateTime date2) {
         return this.invoices.stream()
                 .filter(invoice ->
                         !invoice.getPublishedDate().isBefore(date1) &&

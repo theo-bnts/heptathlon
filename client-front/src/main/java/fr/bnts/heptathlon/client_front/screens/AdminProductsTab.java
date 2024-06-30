@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AdminProductsTab {
-    private JPanel panel1;
-    private JTree productCategoryTree;
-    private JTextField fieldFilterArticles;
     private final List<Product> products;
     private final List<ProductCategory> categories;
     private final Service clientServerService;
+    private JPanel panel1;
+    private JTree productCategoryTree;
+    private JTextField fieldFilterArticles;
 
     public AdminProductsTab(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
         this.clientServerService = clientServerService;
@@ -108,7 +108,8 @@ public class AdminProductsTab {
                 if (selectedProduct != null) {
                     try {
                         popupItemQuantity(selectedProduct);
-                    } catch (SQLException | NotBoundException | RemoteException ex) {
+                    } catch (SQLException | NotBoundException |
+                             RemoteException ex) {
                         ex.printStackTrace();
                     }
                 }

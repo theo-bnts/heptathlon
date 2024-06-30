@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Locale;
 
 public class AdminInvoicesTab {
-    private JPanel panel1;
-    private JTree invoicePublishedDateTree;
     private final List<Invoice> invoices;
     private final Service clientServerService;
+    private JPanel panel1;
+    private JTree invoicePublishedDateTree;
 
     public AdminInvoicesTab(Service clientServerService) throws SQLException, RemoteException {
         this.clientServerService = clientServerService;
@@ -105,7 +105,8 @@ public class AdminInvoicesTab {
                 if (selectedInvoice != null) {
                     try {
                         this.openInvoiceFile(selectedInvoice);
-                    } catch (SQLException | NotBoundException | IOException ex) {
+                    } catch (SQLException | NotBoundException |
+                             IOException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -134,8 +135,7 @@ public class AdminInvoicesTab {
 
         if (Desktop.isDesktopSupported()) {
             Desktop.getDesktop().open(new File(invoiceFileFullPath));
-        }
-        else {
+        } else {
             JOptionPane.showMessageDialog(
                     this.panel1,
                     "Desktop n'est pas supporté",

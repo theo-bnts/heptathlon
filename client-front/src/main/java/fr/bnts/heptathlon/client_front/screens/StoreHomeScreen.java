@@ -24,6 +24,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class StoreHomeScreen {
+    private final Service clientServerService;
+    private final DefaultListModel<String> cartListModel;
+    private final Map<String, Integer> cart;
+    private final Map<String, Product> productMap;
     private JPanel panel;
     private JScrollPane availibleProductListPane;
     private JScrollPane addedToCartListPane;
@@ -32,10 +36,6 @@ public class StoreHomeScreen {
     private JButton validCartButton;
     private JList<String> productsAddedToCartList;
     private JTree productCategoryTree;
-    private final Service clientServerService;
-    private final DefaultListModel<String> cartListModel;
-    private final Map<String, Integer> cart;
-    private final Map<String, Product> productMap;
 
     public StoreHomeScreen(Service clientServerService) throws RemoteException, SQLException {
         this.clientServerService = clientServerService;
