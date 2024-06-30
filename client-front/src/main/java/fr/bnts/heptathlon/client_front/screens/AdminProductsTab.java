@@ -20,20 +20,20 @@ import java.util.stream.Collectors;
 
 public class AdminProductsTab {
     private JPanel panel1;
-    private JTree productCategoryList;
+    private JTree productCategoryTree;
     private JTextField fieldFilterArticles;
-    private final List<Product> allProducts;
-    private final List<ProductCategory> allCategories;
+    private final List<Product> products;
+    private final List<ProductCategory> categories;
     private final Service clientServerService;
 
     public AdminProductsTab(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
         this.clientServerService = clientServerService;
 
-        allCategories = clientServerService.getProductCategories();
-        allProducts = clientServerService.getProducts();
+        categories = clientServerService.getProductCategories();
+        products = clientServerService.getProducts();
 
-        DefaultTreeModel treeModel = createTreeModel(allCategories, allProducts);
-        productCategoryList.setModel(treeModel);
+        DefaultTreeModel treeModel = createTreeModel(categories, products);
+        productCategoryTree.setModel(treeModel);
 
         filterItems();
         addEventListeners();
@@ -62,11 +62,11 @@ public class AdminProductsTab {
 
     private void filterTree() {
         String filter = fieldFilterArticles.getText().toLowerCase();
-        List<Product> filteredProducts = allProducts.stream()
+        List<Product> filteredProducts = products.stream()
                 .filter(product -> product.getName().toLowerCase().contains(filter))
                 .collect(Collectors.toList());
-        DefaultTreeModel filteredTreeModel = createTreeModel(allCategories, filteredProducts);
-        productCategoryList.setModel(filteredTreeModel);
+        DefaultTreeModel filteredTreeModel = createTreeModel(categories, filteredProducts);
+        productCategoryTree.setModel(filteredTreeModel);
     }
 
     private void filterItems() {
@@ -89,7 +89,7 @@ public class AdminProductsTab {
     }
 
     private void addEventListeners() {
-        productCategoryList.addMouseListener(new MouseAdapter() {
+        productCategoryTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -100,7 +100,7 @@ public class AdminProductsTab {
     }
 
     private void handleDoubleClick(MouseEvent e) {
-        TreePath path = productCategoryList.getPathForLocation(e.getX(), e.getY());
+        TreePath path = productCategoryTree.getPathForLocation(e.getX(), e.getY());
         if (path != null) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
             if (node.isLeaf()) {
@@ -118,8 +118,8 @@ public class AdminProductsTab {
 
     private Product getProductFromNode(DefaultMutableTreeNode node) {
         String nodeName = node.getUserObject().toString();
-        String productName = nodeName.split(" \\(Quantité: ")[0];
-        return allProducts.stream()
+        String productName = nodeName.split("\\(")[0].trim();
+        return products.stream()
                 .filter(product -> product.getName().equals(productName))
                 .findFirst()
                 .orElse(null);
@@ -155,10 +155,10 @@ public class AdminProductsTab {
     }
 
     private void refreshTree() throws SQLException, RemoteException, NotBoundException {
-        allProducts.clear();
-        allProducts.addAll(clientServerService.getProducts());
-        DefaultTreeModel treeModel = createTreeModel(allCategories, allProducts);
-        productCategoryList.setModel(treeModel);
+        products.clear();
+        products.addAll(clientServerService.getProducts());
+        DefaultTreeModel treeModel = createTreeModel(categories, products);
+        productCategoryTree.setModel(treeModel);
     }
 
     public JPanel getPanel() {

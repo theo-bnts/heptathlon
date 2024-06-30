@@ -22,13 +22,13 @@ public class AdminHomeScreen {
         tabGrossSales.setLayout(new BorderLayout());
         tabGrossSales.add(adminGrossSalesTab.getPanel());
 
-        AdminInvoicesTab adminInvoicesTab = new AdminInvoicesTab();
-        tabInvoices.setLayout(new BorderLayout());
-        tabInvoices.add(adminInvoicesTab.getPanel());
-
         AdminProductsTab adminProductsTab = new AdminProductsTab(clientServerService);
         tabProduct.setLayout(new BorderLayout());
         tabProduct.add(adminProductsTab.getPanel());
+
+        AdminInvoicesTab adminInvoicesTab = new AdminInvoicesTab(clientServerService);
+        tabInvoices.setLayout(new BorderLayout());
+        tabInvoices.add(adminInvoicesTab.getPanel());
     }
 
     public JPanel getPanel() {
