@@ -61,7 +61,7 @@ public class AdminInvoicesTab {
             DefaultMutableTreeNode dayNode = findOrCreateChild(monthNode, day);
 
             DefaultMutableTreeNode invoiceNode = new DefaultMutableTreeNode(
-                    invoice.getId() + " (Heure: " + time + ", Total: " + invoice.getPrice() + ", Méthode de paiement: " + invoice.getPaymentMethod() + ")"
+                    invoice.getId() + " (Heure: " + time + ", Total: " + invoice.getPrice() + "€, Méthode de paiement: " + invoice.getPaymentMethod() + ")"
             );
             dayNode.add(invoiceNode);
         }

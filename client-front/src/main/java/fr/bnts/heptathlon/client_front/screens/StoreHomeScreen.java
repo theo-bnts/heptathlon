@@ -82,39 +82,43 @@ public class StoreHomeScreen {
         this.productCategoryTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
-                    TreePath path = productCategoryTree.getPathForLocation(e.getX(), e.getY());
-                    if (path != null) {
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-                        if (node.isLeaf()) {
-                            Product selectedProduct = getProductFromNode(node);
-                            if (selectedProduct != null) {
-                                addToCart(selectedProduct);
-                            }
-                        }
-                    }
-                }
+                handleProductCategoryTreeMouseClicked(e);
             }
         });
 
         productsAddedToCartList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
-                    int index = productsAddedToCartList.locationToIndex(e.getPoint());
-                    if (index >= 0) {
-                        String selectedValue = productsAddedToCartList.getModel().getElementAt(index);
-                        String productName = selectedValue.split(" - ")[1].trim();
-                        Product selectedProduct = productMap.get(productName);
-                        if (selectedProduct != null) {
-                            removeFromCart(selectedProduct);
-                        }
-                    }
-                }
+                handleProductsAddedToCartListMouseClicked(e);
             }
         });
 
         validCartButton.addActionListener(e -> doCheckout());
+    }
+
+    private void handleProductCategoryTreeMouseClicked(MouseEvent e) {
+        TreePath path = productCategoryTree.getPathForLocation(e.getX(), e.getY());
+        if (path != null) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+            if (node.isLeaf()) {
+                Product selectedProduct = getProductFromNode(node);
+                if (selectedProduct != null) {
+                    addToCart(selectedProduct);
+                }
+            }
+        }
+    }
+
+    private void handleProductsAddedToCartListMouseClicked(MouseEvent e) {
+        int index = productsAddedToCartList.locationToIndex(e.getPoint());
+        if (index >= 0) {
+            String selectedValue = productsAddedToCartList.getModel().getElementAt(index);
+            String productName = selectedValue.split(" - ")[1].trim();
+            Product selectedProduct = productMap.get(productName);
+            if (selectedProduct != null) {
+                removeFromCart(selectedProduct);
+            }
+        }
     }
 
     private Product getProductFromNode(DefaultMutableTreeNode node) {
