@@ -56,7 +56,6 @@ public class StoreTab {
     }
 
 
-
     private void loadProducts() throws RemoteException, SQLException {
         List<Product> products = this.clientServerService.getProducts();
         List<ProductCategory> categories = this.clientServerService.getProductCategories();

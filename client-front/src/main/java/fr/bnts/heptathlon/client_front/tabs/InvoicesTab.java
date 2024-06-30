@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class InvoicesTab {
-    private List<Invoice> invoices;
     private final Service clientServerService;
+    private List<Invoice> invoices;
     private JPanel panel1;
     private JTree invoicePublishedDateTree;
 

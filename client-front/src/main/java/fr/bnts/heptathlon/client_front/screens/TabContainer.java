@@ -13,17 +13,16 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 public class TabContainer {
+    private final StoreTab storeTab;
+    private final ProductsTab productsTab;
+    private final InvoicesTab invoicesTab;
+    private final GrossSalesTab grossSalesTab;
     private JTabbedPane tabbedPane1;
     private JPanel panel1;
     private JPanel tabGrossSales;
     private JPanel tabProduct;
     private JPanel tabInvoices;
     private JPanel tabStore;
-
-    private final StoreTab storeTab;
-    private final ProductsTab productsTab;
-    private final InvoicesTab invoicesTab;
-    private final GrossSalesTab grossSalesTab;
 
     public TabContainer(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
         tabbedPane1.setSelectedIndex(0);

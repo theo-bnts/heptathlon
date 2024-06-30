@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductsTab {
+    private final Service clientServerService;
     private List<Product> products;
     private List<ProductCategory> categories;
-    private final Service clientServerService;
     private JPanel panel1;
     private JTree productCategoryTree;
     private JTextField fieldFilterArticles;
@@ -135,13 +135,13 @@ public class ProductsTab {
         JSpinner spinner =
                 new JSpinner(new SpinnerNumberModel(selectedProduct.getQuantity(), 0, 32767, 1));
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Article sélectionné: " + selectedProduct.getName()));
+        panel.add(new JLabel("Quantité"));
         panel.add(spinner);
 
         int result = JOptionPane.showOptionDialog(
                 null,
                 panel,
-                "Modifier la quantité en stock",
+                selectedProduct.getName(),
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 null,
