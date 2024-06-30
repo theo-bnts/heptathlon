@@ -45,7 +45,6 @@ public class InvoicesTab {
         this.invoicePublishedDateTree.setModel(treeModel);
     }
 
-
     private DefaultTreeModel createTreeModel(List<Invoice> invoices) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Factures");
 

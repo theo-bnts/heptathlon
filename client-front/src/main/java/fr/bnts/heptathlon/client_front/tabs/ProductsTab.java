@@ -67,9 +67,11 @@ public class ProductsTab {
 
     private void filterTree() {
         String filter = fieldFilterArticles.getText();
+
         List<Product> filteredProducts = products.stream()
                 .filter(product -> product.getName().contains(filter))
                 .collect(Collectors.toList());
+
         DefaultTreeModel filteredTreeModel = createTreeModel(categories, filteredProducts);
         productCategoryTree.setModel(filteredTreeModel);
     }
@@ -124,7 +126,9 @@ public class ProductsTab {
 
     private Product getProductFromNode(DefaultMutableTreeNode node) {
         String nodeName = node.getUserObject().toString();
+
         String productName = nodeName.split("\\(")[0].trim();
+
         return products.stream()
                 .filter(product -> product.getName().equals(productName))
                 .findFirst()
@@ -156,7 +160,6 @@ public class ProductsTab {
             clientServerService.updateProduct(selectedProduct);
 
             refreshTree();
-            System.out.println("Article : " + selectedProduct.getName() + ", Nouvelle quantité: " + newQuantity);
         }
     }
 
