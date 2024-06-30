@@ -22,6 +22,7 @@ public class Main {
         );
 
         ServiceConnector clientServerServiceConnector = new ServiceConnector(
+                "localhost",
                 1100,
                 "client_server",
                 clientServerDatabase

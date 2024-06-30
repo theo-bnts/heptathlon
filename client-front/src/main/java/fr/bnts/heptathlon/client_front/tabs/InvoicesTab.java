@@ -30,7 +30,10 @@ public class InvoicesTab {
     public InvoicesTab(Service clientServerService) throws SQLException, RemoteException {
         this.clientServerService = clientServerService;
 
-        this.invoices = clientServerService.getInvoices();
+        this.invoices = clientServerService.getInvoices()
+                .stream()
+                .sorted((invoice1, invoice2) -> invoice2.getPublishedDate().compareTo(invoice1.getPublishedDate()))
+                .toList();
 
         DefaultTreeModel treeModel = createTreeModel(this.invoices);
         this.invoicePublishedDateTree.setModel(treeModel);

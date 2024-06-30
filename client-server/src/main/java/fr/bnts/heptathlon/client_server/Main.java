@@ -27,6 +27,7 @@ public class Main {
         );
 
         ServiceConnector mainServerServiceConnector = new ServiceConnector(
+                "localhost",
                 1099,
                 "main_server",
                 mainServerDatabase
@@ -41,6 +42,7 @@ public class Main {
         System.out.println("Data synchronisation started");
 
         ServiceConnector clientServerServiceConnector = new ServiceConnector(
+                "localhost",
                 1100,
                 "client_server",
                 clientServerDatabase

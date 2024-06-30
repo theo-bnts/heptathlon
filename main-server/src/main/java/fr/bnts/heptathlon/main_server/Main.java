@@ -16,6 +16,7 @@ public class Main {
         );
 
         ServiceConnector serviceConnector = new ServiceConnector(
+                "localhost",
                 1099,
                 "main_server",
                 databaseConnector
