@@ -4,6 +4,11 @@ import javax.swing.*;
 
 public class StoreHomeScreen {
     private JPanel panel;
+    private JScrollPane paneAvailibleProductList;
+    private JScrollPane paneAddedToCartList;
+    private JPanel bottomPane;
+    private JLabel labelTotalCart;
+    private JButton buttonValidCart;
 
     public StoreHomeScreen() {
     }

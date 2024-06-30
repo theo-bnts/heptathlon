@@ -48,7 +48,9 @@ public class AdminProductsTab {
                     .toList();
             if (!productsInCategory.isEmpty()) {
                 for (Product product : productsInCategory) {
-                    DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(product.getName() + " (Quantité: " + product.getQuantity() + ")");
+                    DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(
+                            product.getName() + " (Quantité: " + product.getQuantity() + ", Prix: " + product.getPrice() + " €)"
+                    );
                     categoryNode.add(productNode);
                 }
                 root.add(categoryNode);
@@ -122,9 +124,8 @@ public class AdminProductsTab {
                 .orElse(null);
     }
 
-
     private void popupItemQuantity(Product selectedProduct) throws SQLException {
-        JSpinner spinner = new JSpinner(new SpinnerNumberModel(selectedProduct.getQuantity(), -1, 32767, 1));
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(selectedProduct.getQuantity(), 0, 32767, 1));
         JPanel panel = new JPanel();
         panel.add(new JLabel("Article sélectionné : " + selectedProduct.getName()));
         panel.add(spinner);

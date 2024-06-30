@@ -18,15 +18,15 @@ public class AdminHomeScreen {
 
         AdminGrossSalesTab adminGrossSalesTab = new AdminGrossSalesTab();
         tabGrossSales.setLayout(new BorderLayout());
-        tabGrossSales.add(adminGrossSalesTab.getPanel(), BorderLayout.CENTER);
+        tabGrossSales.add(adminGrossSalesTab.getPanel());
 
         AdminInvoicesTab adminInvoicesTab = new AdminInvoicesTab();
         tabInvoices.setLayout(new BorderLayout());
-        tabInvoices.add(adminInvoicesTab.getPanel(), BorderLayout.CENTER);
+        tabInvoices.add(adminInvoicesTab.getPanel());
 
         AdminProductsTab adminProductsTab = new AdminProductsTab();
         tabProduct.setLayout(new BorderLayout());
-        tabProduct.add(adminProductsTab.getPanel(), BorderLayout.CENTER);
+        tabProduct.add(adminProductsTab.getPanel());
     }
 
     public JPanel getPanel() {
