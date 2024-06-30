@@ -56,6 +56,7 @@ public class StoreTab {
     }
 
 
+
     private void loadProducts() throws RemoteException, SQLException {
         List<Product> products = this.clientServerService.getProducts();
         List<ProductCategory> categories = this.clientServerService.getProductCategories();
@@ -71,19 +72,25 @@ public class StoreTab {
             List<Product> productsInCategory = products.stream()
                     .filter(product -> product.getCategory().getId() == category.getId())
                     .toList();
+
             if (!productsInCategory.isEmpty()) {
                 for (Product product : productsInCategory) {
-                    DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(
-                            product.getName() + " (Quantité: " + product.getQuantity() + ", Prix: " + product.getPrice() + "€)"
-                    );
-                    categoryNode.add(productNode);
-                    this.productMap.put(product.getName(), product);
+                    if (product.getQuantity() > 0) {
+                        DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(
+                                product.getName() + " (Quantité en stock: " + product.getQuantity() + ", Prix: " + product.getPrice() + "€)"
+                        );
+                        categoryNode.add(productNode);
+                        this.productMap.put(product.getName(), product);
+                    }
                 }
-                root.add(categoryNode);
+                if (categoryNode.getChildCount() > 0) {
+                    root.add(categoryNode);
+                }
             }
         }
         return new DefaultTreeModel(root);
     }
+
 
     private void addEventListeners() {
         this.productCategoryTree.addMouseListener(new MouseAdapter() {
@@ -120,13 +127,17 @@ public class StoreTab {
         int index = productsAddedToCartList.locationToIndex(e.getPoint());
         if (index >= 0) {
             String selectedValue = productsAddedToCartList.getModel().getElementAt(index);
-            String productName = selectedValue.split(" - ")[1].trim();
-            Product selectedProduct = productMap.get(productName);
-            if (selectedProduct != null) {
-                removeFromCart(selectedProduct);
+            String[] parts = selectedValue.split(" x ");
+            if (parts.length > 1) {
+                String productName = parts[1].split(" = ")[0].trim();
+                Product selectedProduct = productMap.get(productName);
+                if (selectedProduct != null) {
+                    removeFromCart(selectedProduct);
+                }
             }
         }
     }
+
 
     private Product getProductFromNode(DefaultMutableTreeNode node) {
         String nodeName = node.getUserObject().toString();
