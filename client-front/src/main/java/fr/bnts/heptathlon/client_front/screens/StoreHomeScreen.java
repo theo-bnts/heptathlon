@@ -39,7 +39,7 @@ public class StoreHomeScreen {
         this.cart = new HashMap<>();
         this.productMap = new HashMap<>();
         this.cartListModel = new DefaultListModel<>();
-        productsAddedToCartList.setModel(cartListModel);
+        this.productsAddedToCartList.setModel(cartListModel);
 
         loadProducts();
         addEventListeners();
@@ -47,10 +47,10 @@ public class StoreHomeScreen {
     }
 
     private void loadProducts() throws RemoteException, SQLException {
-        List<Product> products = clientServerService.getProducts();
-        List<ProductCategory> categories = clientServerService.getProductCategories();
+        List<Product> products = this.clientServerService.getProducts();
+        List<ProductCategory> categories = this.clientServerService.getProductCategories();
         DefaultTreeModel treeModel = createTreeModel(categories, products);
-        productCategoryTree.setModel(treeModel);
+        this.productCategoryTree.setModel(treeModel);
     }
 
     private DefaultTreeModel createTreeModel(List<ProductCategory> categories, List<Product> products) {
@@ -67,7 +67,7 @@ public class StoreHomeScreen {
                             product.getName() + " (Quantité: " + product.getQuantity() + ", Prix: " + product.getPrice() + "€)"
                     );
                     categoryNode.add(productNode);
-                    productMap.put(product.getName(), product);
+                    this.productMap.put(product.getName(), product);
                 }
                 root.add(categoryNode);
             }
@@ -76,7 +76,7 @@ public class StoreHomeScreen {
     }
 
     private void addEventListeners() {
-        productCategoryTree.addMouseListener(new MouseAdapter() {
+        this.productCategoryTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
@@ -144,12 +144,12 @@ public class StoreHomeScreen {
     }
 
     private void updateCartList() {
-        cartListModel.clear();
+        this.cartListModel.clear();
         for (Map.Entry<String, Integer> entry : cart.entrySet()) {
             String productName = entry.getKey();
             int count = entry.getValue();
             Product product = productMap.get(productName);
-            cartListModel.addElement("x" + count + " - " + productName + " - " + (count * product.getPrice()) + "€");
+            this.cartListModel.addElement("x" + count + " - " + productName + " - " + (count * product.getPrice()) + "€");
         }
     }
 
@@ -161,7 +161,7 @@ public class StoreHomeScreen {
             Product product = productMap.get(productName);
             total += count * product.getPrice();
         }
-        totalCartLabel.setText("Total: " + total + "€");
+        this.totalCartLabel.setText("Total: " + total + "€");
     }
 
     private void doCheckout() {
@@ -169,7 +169,7 @@ public class StoreHomeScreen {
         for (Map.Entry<String, Integer> entry : cart.entrySet()) {
             String productName = entry.getKey();
             int count = entry.getValue();
-            Product product = productMap.get(productName);
+            Product product = this.productMap.get(productName);
             total += count * product.getPrice();
         }
 
@@ -205,9 +205,9 @@ public class StoreHomeScreen {
             try {
                 createInvoice(total, selectedPaymentMethod);
                 JOptionPane.showMessageDialog(null, "Paiement réussi !");
-                cart.clear();
-                updateCartList();
-                loadProducts();
+                this.cart.clear();
+                this.updateCartList();
+                this.loadProducts();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Erreur lors de la création de la facture : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
@@ -225,17 +225,14 @@ public class StoreHomeScreen {
             Product product = productMap.get(productName);
             String invoiceProductId = UUID.randomUUID().toString();
             InvoiceProduct invoiceProduct = new InvoiceProduct(invoiceProductId, invoiceId, product.getPrice(), quantity, product);
-            clientServerService.addInvoiceProduct(invoiceProduct);
+            this.clientServerService.addInvoiceProduct(invoiceProduct);
 
             int newQuantity = product.getQuantity() - quantity;
             product.setQuantity(newQuantity);
-            clientServerService.updateProduct(product);
+            this.clientServerService.updateProduct(product);
         }
 
-        clientServerService.addInvoice(invoice);
-
-        System.out.println("Facture créée : " + invoiceId + " - Montant : " + total + "€ - Méthode de paiement : " + paymentMethod);
-    }
+        this.clientServerService.addInvoice(invoice);}
 
     public JPanel getPanel() {
         return panel;
