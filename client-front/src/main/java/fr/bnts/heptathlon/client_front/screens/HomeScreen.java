@@ -1,7 +1,7 @@
 package fr.bnts.heptathlon.client_front.screens;
 
 import javax.swing.*;
-import fr.bnts.heptathlon.client_front.common.Buttons;
+import fr.bnts.heptathlon.client_front.commons.Buttons;
 
 public class HomeScreen {
     private JButton ecranCaisseButton;

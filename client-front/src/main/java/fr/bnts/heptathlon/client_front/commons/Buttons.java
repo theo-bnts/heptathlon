@@ -1,4 +1,4 @@
-package fr.bnts.heptathlon.client_front.common;
+package fr.bnts.heptathlon.client_front.commons;
 
 import javax.swing.*;
 import java.awt.*;
