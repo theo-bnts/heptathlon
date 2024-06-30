@@ -15,6 +15,7 @@ public class Main {
     public static void main(String[] args) throws NotBoundException, RemoteException {
         setUILook();
 
+        // Initialize database and service connectors
         DatabaseConnector clientServerDatabase = new DatabaseConnector(
                 "localhost",
                 3307,
@@ -31,6 +32,7 @@ public class Main {
 
         Service clientServerService = clientServerServiceConnector.connect();
 
+        // Create and show the main frame
         JFrame frame = new JFrame("Heptathlon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -79,7 +81,12 @@ public class Main {
         });
 
         homeScreen.getEcranCaisseButton().addActionListener(e -> {
-            StoreHomeScreen storeHomeScreen = new StoreHomeScreen();
+            StoreHomeScreen storeHomeScreen = null;
+            try {
+                storeHomeScreen = new StoreHomeScreen(clientServerService);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
             setScreen(frame, storeHomeScreen.getPanel());
         });
     }
