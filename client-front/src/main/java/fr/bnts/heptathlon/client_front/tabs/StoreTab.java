@@ -77,7 +77,7 @@ public class StoreTab {
                 for (Product product : productsInCategory) {
                     if (product.getQuantity() > 0) {
                         DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(
-                                product.getName() + " (Quantité en stock: " + product.getQuantity() + ", Prix: " + product.getPrice() + "€)"
+                                product.getName() + " (Quantité: " + product.getQuantity() + ", Prix: " + product.getPrice() + "€)"
                         );
                         categoryNode.add(productNode);
                         this.productMap.put(product.getName(), product);
