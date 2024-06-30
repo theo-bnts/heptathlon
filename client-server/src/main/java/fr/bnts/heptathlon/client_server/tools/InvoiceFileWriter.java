@@ -27,7 +27,7 @@ public abstract class InvoiceFileWriter {
         content
                 .append("Total price: ")
                 .append(invoice.getPrice())
-                .append("$")
+                .append("€")
                 .append("\n");
 
         content

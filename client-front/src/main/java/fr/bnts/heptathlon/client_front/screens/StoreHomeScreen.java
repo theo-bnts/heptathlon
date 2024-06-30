@@ -1,10 +1,15 @@
 package fr.bnts.heptathlon.client_front.screens;
 
 import fr.bnts.heptathlon.main_server.entities.Product;
+import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,15 +21,18 @@ public class StoreHomeScreen {
     private JScrollPane availibleProductListPane;
     private JScrollPane addedToCartListPane;
     private JPanel bottomPane;
+
+    private JList<String> productsAddedToCartList;
+    private JTree productCategoryTree;
+
     private JLabel totalCartLabel;
     private JButton validCartButton;
-    private JList<String> productsAddedToCartList;
-    private JPanel productPanel;
 
-    private Service clientServerService;
-    private DefaultListModel<String> cartListModel;
-    private Map<String, Integer> cart;
-    private Map<String, Product> productMap;
+    private final Service clientServerService;
+
+    private final DefaultListModel<String> cartListModel;
+    private final Map<String, Integer> cart;
+    private final Map<String, Product> productMap;
 
     public StoreHomeScreen(Service clientServerService) throws RemoteException, SQLException {
         this.clientServerService = clientServerService;
@@ -33,40 +41,81 @@ public class StoreHomeScreen {
         this.cartListModel = new DefaultListModel<>();
         productsAddedToCartList.setModel(cartListModel);
 
-        if (productPanel == null) {
-            productPanel = new JPanel();
-        }
-
-        productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
-        availibleProductListPane.setViewportView(productPanel);
         loadProducts();
+        addEventListeners();
         updateTotalCartLabel();
     }
 
     private void loadProducts() throws RemoteException, SQLException {
         List<Product> products = clientServerService.getProducts();
-        for (Product product : products) {
-            if (product.getQuantity() > 0) {
-                JPanel productPane = new JPanel();
-                productPane.setLayout(new FlowLayout());
+        List<ProductCategory> categories = clientServerService.getProductCategories();
+        DefaultTreeModel treeModel = createTreeModel(categories, products);
+        productCategoryTree.setModel(treeModel);
+    }
 
-                JLabel productLabel = new JLabel(product.getName() + " : " + product.getPrice() + "€");
-                JButton addToCartButton = new JButton("+");
-                JButton deleteToCartButton = new JButton("-");
+    private DefaultTreeModel createTreeModel(List<ProductCategory> categories, List<Product> products) {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Produits");
 
-                addToCartButton.addActionListener(e -> addToCart(product));
-                deleteToCartButton.addActionListener(e -> removeFromCart(product));
-
-                productPane.add(productLabel);
-                productPane.add(addToCartButton);
-                productPane.add(deleteToCartButton);
-
-                productPanel.add(productPane);
-                productMap.put(product.getName(), product);
+        for (ProductCategory category : categories) {
+            DefaultMutableTreeNode categoryNode = new DefaultMutableTreeNode(category.getName());
+            List<Product> productsInCategory = products.stream()
+                    .filter(product -> product.getCategory().getId() == category.getId())
+                    .toList();
+            if (!productsInCategory.isEmpty()) {
+                for (Product product : productsInCategory) {
+                    DefaultMutableTreeNode productNode = new DefaultMutableTreeNode(
+                            product.getName() + " (Quantité: " + product.getQuantity() + ", Prix: " + product.getPrice() + "€)"
+                    );
+                    categoryNode.add(productNode);
+                    productMap.put(product.getName(), product);
+                }
+                root.add(categoryNode);
             }
         }
-        productPanel.revalidate();
-        productPanel.repaint();
+        return new DefaultTreeModel(root);
+    }
+
+    private void addEventListeners() {
+        productCategoryTree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    TreePath path = productCategoryTree.getPathForLocation(e.getX(), e.getY());
+                    if (path != null) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                        if (node.isLeaf()) {
+                            Product selectedProduct = getProductFromNode(node);
+                            if (selectedProduct != null) {
+                                addToCart(selectedProduct);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        productsAddedToCartList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    int index = productsAddedToCartList.locationToIndex(e.getPoint());
+                    if (index >= 0) {
+                        String selectedValue = productsAddedToCartList.getModel().getElementAt(index);
+                        String productName = selectedValue.split(" - ")[1].trim();
+                        Product selectedProduct = productMap.get(productName);
+                        if (selectedProduct != null) {
+                            removeFromCart(selectedProduct);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private Product getProductFromNode(DefaultMutableTreeNode node) {
+        String nodeName = node.getUserObject().toString();
+        String productName = nodeName.split(" \\(Quantité: ")[0].trim();
+        return productMap.get(productName);
     }
 
     private void addToCart(Product product) {

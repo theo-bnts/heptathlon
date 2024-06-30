@@ -15,7 +15,6 @@ public class Main {
     public static void main(String[] args) throws NotBoundException, RemoteException {
         setUILook();
 
-        // Initialize database and service connectors
         DatabaseConnector clientServerDatabase = new DatabaseConnector(
                 "localhost",
                 3307,
