@@ -55,20 +55,23 @@ public class DataSynchronisation {
         long initialDelayPrices = calculateInitialDelay(PRICE_SYNCHRONISATION_TIME);
         long initialDelayInvoices = calculateInitialDelay(INVOICE_SYNCHRONISATION_TIME);
 
-        if (initialDelayPrices < 0) {
-            initialDelayPrices += TimeUnit.DAYS.toMillis(1);
-        }
-
         scheduler.scheduleAtFixedRate(pricesTask, initialDelayPrices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);
         scheduler.scheduleAtFixedRate(invoicesTask, initialDelayInvoices, TimeUnit.DAYS.toMillis(1), TimeUnit.MILLISECONDS);
     }
 
     private long calculateInitialDelay(LocalTime targetTime) {
         LocalTime now = LocalTime.now();
+        long delay;
+
         if (now.isAfter(targetTime)) {
-            targetTime = targetTime.plusHours(24);
+            delay = TimeUnit.DAYS.toMillis(1) -
+                    Duration.between(LocalTime.MIDNIGHT, now).toMillis() +
+                    Duration.between(LocalTime.MIDNIGHT, targetTime).toMillis();
+        } else {
+            delay = Duration.between(now, targetTime).toMillis();
         }
-        return Duration.between(now, targetTime).toMillis();
+
+        return delay;
     }
 
     public void initialiseDatabase() throws SQLException, RemoteException {
