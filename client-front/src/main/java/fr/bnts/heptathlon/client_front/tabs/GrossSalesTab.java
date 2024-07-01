@@ -23,9 +23,12 @@ public class GrossSalesTab {
     private final JButton validateButton;
     private final JLabel resultLabel;
     private List<Invoice> invoices;
+    private Service clientServerService;
 
     public GrossSalesTab(Service clientServerService) throws SQLException, RemoteException {
-        this.invoices = clientServerService.getInvoices();
+        this.clientServerService = clientServerService;
+
+        this.refreshData();
 
         JDateComponentFactory factory = new JDateComponentFactory();
 
@@ -50,6 +53,10 @@ public class GrossSalesTab {
         this.panel1.add(this.resultLabel);
 
         this.addEventListeners();
+    }
+
+    public void refreshData() throws SQLException, RemoteException {
+        this.invoices = this.clientServerService.getInvoices();
     }
 
     private Date dateFromAMonthAgo() {

@@ -53,6 +53,7 @@ public class TabContainer {
                 case 0 -> storeTab.refreshData();
                 case 1 -> productsTab.refreshData();
                 case 2 -> invoicesTab.refreshData();
+                case 3 -> grossSalesTab.refreshData();
             }
         } catch (RemoteException | SQLException | NotBoundException e) {
             throw new RuntimeException(e);
