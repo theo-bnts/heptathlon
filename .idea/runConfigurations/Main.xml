@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="fr.bnts.heptathlon.main_server.Main" />
+    <module name="main-server" />
+    <option name="PROGRAM_PARAMETERS" value="localhost 1099 localhost 3308" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="fr.bnts.heptathlon.main_server.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
