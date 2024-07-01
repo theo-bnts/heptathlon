@@ -12,27 +12,28 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) throws NotBoundException, IOException, SQLException {
         DatabaseConnector mainServerDatabase = new DatabaseConnector(
-                "localhost",
-                3308,
+                args[6],
+                Integer.parseInt(args[7]),
                 "main_server",
                 "main_server",
                 "main_server"
         );
-        DatabaseConnector clientServerDatabase = new DatabaseConnector(
-                "localhost",
-                3307,
-                "client_server",
-                "client_server",
-                "client_server"
-        );
 
         ServiceConnector mainServerServiceConnector = new ServiceConnector(
-                "localhost",
-                1099,
+                args[4],
+                Integer.parseInt(args[5]),
                 "main_server",
                 mainServerDatabase
         );
         Service mainServerService = mainServerServiceConnector.connect();
+
+        DatabaseConnector clientServerDatabase = new DatabaseConnector(
+                args[2],
+                Integer.parseInt(args[3]),
+                "client_server",
+                "client_server",
+                "client_server"
+        );
 
         new DataSynchronisation(
                 mainServerService,
@@ -42,8 +43,8 @@ public class Main {
         System.out.println("Data synchronisation started");
 
         ServiceConnector clientServerServiceConnector = new ServiceConnector(
-                "localhost",
-                1100,
+                args[0],
+                Integer.parseInt(args[1]),
                 "client_server",
                 clientServerDatabase
         );

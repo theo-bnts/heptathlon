@@ -8,16 +8,16 @@ import java.rmi.RemoteException;
 public class Main {
     public static void main(String[] args) throws RemoteException {
         DatabaseConnector databaseConnector = new DatabaseConnector(
-                "localhost",
-                3308,
+                args[2],
+                Integer.parseInt(args[3]),
                 "main_server",
                 "main_server",
                 "main_server"
         );
 
         ServiceConnector serviceConnector = new ServiceConnector(
-                "localhost",
-                1099,
+                args[0],
+                Integer.parseInt(args[1]),
                 "main_server",
                 databaseConnector
         );

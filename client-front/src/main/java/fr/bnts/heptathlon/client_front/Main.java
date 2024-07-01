@@ -14,16 +14,16 @@ public class Main {
         setUILook();
 
         DatabaseConnector clientServerDatabase = new DatabaseConnector(
-                "localhost",
-                3307,
+                args[2],
+                Integer.parseInt(args[3]),
                 "client_server",
                 "client_server",
                 "client_server"
         );
 
         ServiceConnector clientServerServiceConnector = new ServiceConnector(
-                "localhost",
-                1100,
+                args[0],
+                Integer.parseInt(args[1]),
                 "client_server",
                 clientServerDatabase
         );
