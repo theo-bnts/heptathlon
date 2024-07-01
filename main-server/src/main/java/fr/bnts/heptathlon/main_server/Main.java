@@ -1,5 +1,6 @@
 package fr.bnts.heptathlon.main_server;
 
+import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.rmi.ServiceConnector;
 
@@ -15,11 +16,14 @@ public class Main {
                 "main_server"
         );
 
+        InvoiceFileDAO invoiceFileDAO = new InvoiceFileDAO(args[4]);
+
         ServiceConnector serviceConnector = new ServiceConnector(
                 args[0],
                 Integer.parseInt(args[1]),
                 "main_server",
-                databaseConnector
+                databaseConnector,
+                invoiceFileDAO
         );
         serviceConnector.host();
 

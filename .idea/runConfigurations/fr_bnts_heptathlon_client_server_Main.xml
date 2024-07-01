@@ -2,7 +2,7 @@
   <configuration default="false" name="fr.bnts.heptathlon.client_server.Main" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="fr.bnts.heptathlon.client_server.Main" />
     <module name="client-server" />
-    <option name="PROGRAM_PARAMETERS" value="localhost 1100 localhost 3307 localhost 1099 localhost 3308" />
+    <option name="PROGRAM_PARAMETERS" value="localhost 1100 localhost 3307 &quot;$PROJECT_DIR$/client-server/src/main/resources/&quot; localhost 1099" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="fr.bnts.heptathlon.client_server.*" />

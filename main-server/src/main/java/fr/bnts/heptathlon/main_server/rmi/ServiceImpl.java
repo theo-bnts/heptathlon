@@ -8,6 +8,8 @@ import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
@@ -15,10 +17,12 @@ import java.util.List;
 
 public class ServiceImpl extends UnicastRemoteObject implements Service {
     DatabaseConnector databaseConnector;
+    InvoiceFileDAO invoiceFileDAO;
 
-    public ServiceImpl(DatabaseConnector database) throws RemoteException {
+    public ServiceImpl(DatabaseConnector database, InvoiceFileDAO invoiceFileDAO) throws RemoteException {
         super();
         this.databaseConnector = database;
+        this.invoiceFileDAO = invoiceFileDAO;
     }
 
     @Override
@@ -87,18 +91,17 @@ public class ServiceImpl extends UnicastRemoteObject implements Service {
     }
 
     @Override
-    public String getInvoiceFileFullPath(String packageName, Invoice invoice) {
-        return InvoiceFileDAO.getFullPath(packageName, invoice);
+    public Path getInvoiceFileFullPath(Invoice invoice) throws RemoteException {
+        return invoiceFileDAO.getFullPath(invoice);
     }
 
     @Override
-    public byte[] readInvoiceFile(String packageName, Invoice invoice) throws IOException {
-        return InvoiceFileDAO.read(packageName, invoice);
+    public byte[] readInvoiceFile(Invoice invoice) throws IOException {
+        return invoiceFileDAO.read(invoice);
     }
 
     @Override
-    public void writeInvoiceFile(String packageName, Invoice invoice,
-                                 byte[] file) throws IOException {
-        InvoiceFileDAO.write(packageName, invoice, file);
+    public void writeInvoiceFile(Invoice invoice, byte[] file) throws IOException {
+        invoiceFileDAO.write(invoice, file);
     }
 }

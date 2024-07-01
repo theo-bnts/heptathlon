@@ -25,10 +25,14 @@ public class DataSynchronisation {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     Service remoteService;
     DatabaseConnector database;
+    InvoiceFileDAO invoiceFileDAO;
 
-    public DataSynchronisation(Service remoteService, DatabaseConnector localDatabaseConnector) {
+    public DataSynchronisation(Service remoteService,
+                               DatabaseConnector localDatabaseConnector,
+                               InvoiceFileDAO invoiceFileDAO) {
         this.remoteService = remoteService;
         this.database = localDatabaseConnector;
+        this.invoiceFileDAO = invoiceFileDAO;
 
         scheduleTasks();
     }
@@ -39,7 +43,7 @@ public class DataSynchronisation {
                 System.out.println("Synchronising prices from remote");
                 synchronisePricesFromRemote();
             } catch (SQLException | RemoteException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         };
 
@@ -48,7 +52,7 @@ public class DataSynchronisation {
                 System.out.println("Synchronising invoices to remote");
                 synchroniseInvoicesToRemote();
             } catch (SQLException | IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         };
 
@@ -133,7 +137,7 @@ public class DataSynchronisation {
     }
 
     private void readAndWriteInvoiceFileToRemote(Invoice invoice) throws RemoteException, IOException {
-        byte[] invoiceFile = InvoiceFileDAO.read("client-server", invoice);
-        remoteService.writeInvoiceFile("main-server", invoice, invoiceFile);
+        byte[] invoiceFile = this.invoiceFileDAO.read(invoice);
+        remoteService.writeInvoiceFile(invoice, invoiceFile);
     }
 }

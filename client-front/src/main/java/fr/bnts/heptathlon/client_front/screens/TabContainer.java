@@ -4,6 +4,7 @@ import fr.bnts.heptathlon.client_front.tabs.GrossSalesTab;
 import fr.bnts.heptathlon.client_front.tabs.InvoicesTab;
 import fr.bnts.heptathlon.client_front.tabs.ProductsTab;
 import fr.bnts.heptathlon.client_front.tabs.StoreTab;
+import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 
 import javax.swing.*;
@@ -24,10 +25,12 @@ public class TabContainer {
     private JPanel tabInvoices;
     private JPanel tabStore;
 
-    public TabContainer(Service clientServerService) throws SQLException, NotBoundException, RemoteException {
+    public TabContainer(Service clientServerService,
+                        InvoiceFileDAO invoiceFileDAO) throws SQLException,
+            NotBoundException, RemoteException {
         tabbedPane1.setSelectedIndex(0);
 
-        storeTab = new StoreTab(clientServerService);
+        storeTab = new StoreTab(clientServerService, invoiceFileDAO);
         tabStore.setLayout(new BorderLayout());
         tabStore.add(storeTab.getPanel());
 
@@ -35,7 +38,7 @@ public class TabContainer {
         tabProduct.setLayout(new BorderLayout());
         tabProduct.add(productsTab.getPanel());
 
-        invoicesTab = new InvoicesTab(clientServerService);
+        invoicesTab = new InvoicesTab(clientServerService, invoiceFileDAO);
         tabInvoices.setLayout(new BorderLayout());
         tabInvoices.add(invoicesTab.getPanel());
 

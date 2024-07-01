@@ -1,6 +1,7 @@
 package fr.bnts.heptathlon.client_server;
 
 import fr.bnts.heptathlon.client_server.tools.DataSynchronisation;
+import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 import fr.bnts.heptathlon.main_server.rmi.ServiceConnector;
@@ -11,19 +12,11 @@ import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws NotBoundException, IOException, SQLException {
-        DatabaseConnector mainServerDatabase = new DatabaseConnector(
-                args[6],
-                Integer.parseInt(args[7]),
-                "main_server",
-                "main_server",
-                "main_server"
-        );
 
         ServiceConnector mainServerServiceConnector = new ServiceConnector(
-                args[4],
-                Integer.parseInt(args[5]),
-                "main_server",
-                mainServerDatabase
+                args[5],
+                Integer.parseInt(args[6]),
+                "main_server"
         );
         Service mainServerService = mainServerServiceConnector.connect();
 
@@ -35,9 +28,12 @@ public class Main {
                 "client_server"
         );
 
+        InvoiceFileDAO invoiceFileDAO = new InvoiceFileDAO(args[4]);
+
         new DataSynchronisation(
                 mainServerService,
-                clientServerDatabase
+                clientServerDatabase,
+                invoiceFileDAO
         );
 
         System.out.println("Data synchronisation started");
@@ -46,7 +42,8 @@ public class Main {
                 args[0],
                 Integer.parseInt(args[1]),
                 "client_server",
-                clientServerDatabase
+                clientServerDatabase,
+                invoiceFileDAO
         );
         clientServerServiceConnector.host();
 

@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -23,12 +24,15 @@ import java.util.Locale;
 
 public class InvoicesTab {
     private final Service clientServerService;
+    private final InvoiceFileDAO invoiceFileDAO;
     private List<Invoice> invoices;
     private JPanel panel1;
     private JTree invoicePublishedDateTree;
 
-    public InvoicesTab(Service clientServerService) throws SQLException, RemoteException {
+    public InvoicesTab(Service clientServerService, InvoiceFileDAO invoiceFileDAO) throws SQLException,
+            RemoteException {
         this.clientServerService = clientServerService;
+        this.invoiceFileDAO = invoiceFileDAO;
 
         this.refreshData();
 
@@ -131,14 +135,11 @@ public class InvoicesTab {
     }
 
     private void openInvoiceFile(Invoice invoice) throws SQLException, IOException, NotBoundException {
-        byte[] invoiceFile = this.clientServerService.readInvoiceFile(
-                "client-server",
-                invoice
-        );
+        byte[] invoiceFile = this.clientServerService.readInvoiceFile(invoice);
 
-        InvoiceFileDAO.write("client-front", invoice, invoiceFile);
+        this.invoiceFileDAO.write(invoice, invoiceFile);
 
-        String invoiceFileFullPath = InvoiceFileDAO.getFullPath("client-front", invoice);
+        String invoiceFileFullPath = String.valueOf(this.invoiceFileDAO.getFullPath(invoice));
 
         if (Desktop.isDesktopSupported()) {
             Desktop.getDesktop().open(new File(invoiceFileFullPath));

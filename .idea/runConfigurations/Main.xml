@@ -2,7 +2,7 @@
   <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="fr.bnts.heptathlon.main_server.Main" />
     <module name="main-server" />
-    <option name="PROGRAM_PARAMETERS" value="localhost 1099 localhost 3308" />
+    <option name="PROGRAM_PARAMETERS" value="localhost 1099 localhost 3308 &quot;$PROJECT_DIR$/main-server/src/main/resources/&quot;" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="fr.bnts.heptathlon.main_server.*" />

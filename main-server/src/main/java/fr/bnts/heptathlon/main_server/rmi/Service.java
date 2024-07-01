@@ -6,6 +6,7 @@ import fr.bnts.heptathlon.main_server.entities.Product;
 import fr.bnts.heptathlon.main_server.entities.ProductCategory;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -39,9 +40,9 @@ public interface Service extends Remote {
 
     void addInvoice(Invoice invoice) throws RemoteException, SQLException;
 
-    String getInvoiceFileFullPath(String packageName, Invoice invoice) throws RemoteException;
+    Path getInvoiceFileFullPath(Invoice invoice) throws RemoteException;
 
-    byte[] readInvoiceFile(String packageName, Invoice invoice) throws RemoteException, IOException;
+    byte[] readInvoiceFile(Invoice invoice) throws RemoteException, IOException;
 
-    void writeInvoiceFile(String packageName, Invoice invoice, byte[] file) throws IOException;
+    void writeInvoiceFile(Invoice invoice, byte[] file) throws IOException;
 }

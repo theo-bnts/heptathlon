@@ -1,6 +1,7 @@
 package fr.bnts.heptathlon.client_front;
 
 import fr.bnts.heptathlon.client_front.screens.TabContainer;
+import fr.bnts.heptathlon.main_server.dao.InvoiceFileDAO;
 import fr.bnts.heptathlon.main_server.database.DatabaseConnector;
 import fr.bnts.heptathlon.main_server.rmi.Service;
 import fr.bnts.heptathlon.main_server.rmi.ServiceConnector;
@@ -13,32 +14,24 @@ public class Main {
     public static void main(String[] args) throws NotBoundException, RemoteException {
         setUILook();
 
-        DatabaseConnector clientServerDatabase = new DatabaseConnector(
-                args[2],
-                Integer.parseInt(args[3]),
-                "client_server",
-                "client_server",
+        ServiceConnector clientServerServiceConnector = new ServiceConnector(
+                args[1],
+                Integer.parseInt(args[2]),
                 "client_server"
         );
-
-        ServiceConnector clientServerServiceConnector = new ServiceConnector(
-                args[0],
-                Integer.parseInt(args[1]),
-                "client_server",
-                clientServerDatabase
-        );
-
         Service clientServerService = clientServerServiceConnector.connect();
 
-        JFrame frame = new JFrame("Heptathlon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        InvoiceFileDAO invoiceFileDAO = new InvoiceFileDAO(args[0]);
 
         TabContainer tabContainer;
         try {
-            tabContainer = new TabContainer(clientServerService);
+            tabContainer = new TabContainer(clientServerService, invoiceFileDAO);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+
+        JFrame frame = new JFrame("Heptathlon");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setScreen(frame, tabContainer.getPanel());
 
         frame.setResizable(false);

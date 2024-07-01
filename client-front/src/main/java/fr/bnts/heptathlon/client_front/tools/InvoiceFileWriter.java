@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public abstract class InvoiceFileWriter {
-    public static void write(Service service, String packageName,
+    public static void write(Service service, InvoiceFileDAO invoiceFileDAO,
                              Invoice invoice) throws SQLException, IOException {
         StringBuilder content = new StringBuilder();
         content
@@ -52,6 +52,6 @@ public abstract class InvoiceFileWriter {
 
         byte[] file = content.toString().getBytes();
 
-        InvoiceFileDAO.write(packageName, invoice, file);
+        invoiceFileDAO.write(invoice, file);
     }
 }

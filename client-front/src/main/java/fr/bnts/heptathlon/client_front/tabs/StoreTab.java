@@ -26,6 +26,7 @@ import java.util.UUID;
 
 public class StoreTab {
     private final Service clientServerService;
+    private final InvoiceFileDAO invoiceFileDAO;
     private DefaultListModel<String> cartListModel;
     private Map<String, Integer> cart;
     private Map<String, Product> productMap;
@@ -38,8 +39,11 @@ public class StoreTab {
     private JList<String> productsAddedToCartList;
     private JTree productCategoryTree;
 
-    public StoreTab(Service clientServerService) throws RemoteException, SQLException {
+    public StoreTab(Service clientServerService,
+                    InvoiceFileDAO invoiceFileDAO) throws RemoteException,
+            SQLException {
         this.clientServerService = clientServerService;
+        this.invoiceFileDAO = invoiceFileDAO;
 
         this.refreshData();
 
@@ -276,10 +280,10 @@ public class StoreTab {
     }
 
     private void writeInvoiceFile(Invoice invoice) throws SQLException, IOException {
-        InvoiceFileWriter.write(this.clientServerService, "client-front", invoice);
+        InvoiceFileWriter.write(this.clientServerService, this.invoiceFileDAO, invoice);
 
-        byte[] file = InvoiceFileDAO.read("client-front", invoice);
-        this.clientServerService.writeInvoiceFile("client-server", invoice, file);
+        byte[] file = this.invoiceFileDAO.read(invoice);
+        this.clientServerService.writeInvoiceFile(invoice, file);
     }
 
     public JPanel getPanel() {
