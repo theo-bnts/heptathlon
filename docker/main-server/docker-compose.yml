@@ -3,7 +3,7 @@ version: '3'
 services:
   mysql:
     restart: always
-    image: mysql:8
+    image: mysql:8.3
     container_name: main_server_mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
